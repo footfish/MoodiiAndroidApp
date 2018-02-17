@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:viewportWidth="158.75"
+    android:viewportHeight="198.4375"
+    android:width="600dp"
+    android:height="750dp">
+    <group
+        android:translateY="-98.56255">
+        <group
+            android:translateX="4.839939"
+            android:translateY="19.08944">
+            <group
+                android:scaleX="0.3641191"
+                android:scaleY="0.3641191"
+                android:translateX="-25.84656"
+                android:translateY="28.329">
+                <path
+                    android:pathData="M318.6847 529.42121c0 0 -21.16967 21.72616 -43.00121 21.72616 -21.83153 0 -43.00119 -21.72616 -43.00119 -21.72616 0 0 31.4269 -5.90983 43.00119 2.40949 12.86332 -7.92317 43.00121 -2.40949 43.00121 -2.40949z"
+                    android:fillColor="#b9736e"
+                    android:strokeMiterLimit="4"
+                    android:fillAlpha="0.9921569" />
+                <path
+                    android:pathData="M310.70147 532.7634c0 0 -15.67807 4.18159 -35.01797 4.18159 -19.33987 0 -35.01798 -4.18159 -35.01798 -4.18159 0 0 24.76464 -1.45066 35.01798 3.13563 11.39523 -4.36788 35.01797 -3.13563 35.01797 -3.13563z"
+                    android:fillColor="#000000"
+                    android:fillAlpha="0.2480392"
+                    android:strokeMiterLimit="4" />
+                <path
+                    android:pathData="M310.70147 532.98516c0 0 -15.67807 4.2437 -35.01798 4.2437 -19.33987 0 -35.01797 -4.2437 -35.01797 -4.2437 0 0 24.76464 16.27784 35.01797 11.69157 11.39523 4.36786 35.01798 -11.69157 35.01798 -11.69157z"
+                    android:fillColor="#ffffff"
+                    android:fillAlpha="0.2480392"
+                    android:strokeMiterLimit="4" />
+                <path
+                    android:pathData="M241.19536 532.45666c0 0 22.99208 4.35984 34.48813 4.35984 11.49605 0 34.48814 -4.35984 34.48814 -4.35984v0.26042c0 0 -22.99209 4.87659 -34.48814 4.87659 -11.49605 0 -34.60301 -4.87659 -34.60301 -4.87659z"
+                    android:fillColor="#000000"
+                    android:fillAlpha="0.7441176"
+                    android:strokeMiterLimit="4" />
+            </group>
+        </group>
+    </group>
+</vector>

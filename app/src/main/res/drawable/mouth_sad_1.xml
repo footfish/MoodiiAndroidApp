@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:viewportWidth="158.75"
+    android:viewportHeight="198.4375"
+    android:width="600dp"
+    android:height="750dp">
+    <group
+        android:translateY="-98.56255">
+        <group
+            android:translateX="4.839939"
+            android:translateY="19.08944">
+            <group
+                android:scaleX="0.4089818"
+                android:scaleY="0.3641191"
+                android:translateX="-38.21447"
+                android:translateY="28.84691">
+                <path
+                    android:pathData="M304.11972 544.95673c0 0 -13.99927 4.28681 -28.43623 4.28681 -14.43695 0 -28.43622 -4.28681 -28.43622 -4.28681 0 0 20.78227 -23.34918 28.43622 -15.02986 8.50638 -7.92317 28.43623 15.02986 28.43623 15.02986z"
+                    android:fillColor="#b9736e"
+                    android:strokeMiterLimit="4"
+                    android:fillAlpha="0.9921569" />
+                <path
+                    android:pathData="M298.8405 542.48581c0 0 -10.05328 -6.08527 -23.157 -7.44465 -12.083 1.43888 -23.15701 7.44465 -23.15701 7.44465 0 0 15.55263 -11.81788 23.15701 -8.49061 7.53554 -4.36788 23.157 8.49061 23.157 8.49061z"
+                    android:fillColor="#000000"
+                    android:fillAlpha="0.2480392"
+                    android:strokeMiterLimit="4" />
+                <path
+                    android:pathData="M298.8405 542.70757c0 0 -11.1917 -5.58394 -23.15701 -7.20268 -12.03853 1.78924 -23.157 7.20268 -23.157 7.20268 0 0 16.37658 4.6516 23.157 0.0653 7.53554 4.36786 23.15701 -0.0653 23.15701 -0.0653z"
+                    android:fillColor="#ffffff"
+                    android:fillAlpha="0.2480392"
+                    android:strokeMiterLimit="4" />
+                <path
+                    android:pathData="M252.87687 542.17907c0 0 15.20441 -7.2664 22.80662 -7.2664 7.60221 0 22.80663 7.2664 22.80663 7.2664v0.26042c0 0 -15.20442 -6.74965 -22.80663 -6.74965 -7.60221 0 -22.88259 6.74965 -22.88259 6.74965z"
+                    android:fillColor="#000000"
+                    android:fillAlpha="0.7441176"
+                    android:strokeMiterLimit="4" />
+            </group>
+        </group>
+    </group>
+</vector>

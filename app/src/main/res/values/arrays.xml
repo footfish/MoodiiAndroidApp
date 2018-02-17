@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer-array name="head_imgs">
+        <item>@drawable/head_1</item>
+        <item>@drawable/head_2</item>
+        <item>@drawable/head_3</item>
+        <item>@drawable/head_4</item>
+        <item>@drawable/head_5</item>
+        <item>@drawable/head_6</item>
+        <item>@drawable/head_7</item>
+        <item>@drawable/head_8</item>
+        <item>@drawable/head_9</item>
+        <item>@drawable/head_10</item>
+        <item>@drawable/head_11</item>
+        <item>@drawable/head_12</item>
+        <item>@drawable/head_13</item>
+        <item>@drawable/head_14</item>
+        <item>@drawable/head_15</item>
+        <item>@drawable/head_16</item>
+        <item>@drawable/head_17</item>
+        <item>@drawable/head_18</item>
+        <item>@drawable/head_19</item>
+        <item>@drawable/head_20</item>
+        <item>@drawable/head_21</item>
+        <item>@drawable/head_22</item>
+        <item>@drawable/head_23</item>
+        <item>@drawable/head_24</item>
+    </integer-array>
+    <integer-array name="skin_tones">
+        <item>@color/skinTone1</item>
+        <item>@color/skinTone2</item>
+        <item>@color/skinTone3</item>
+        <item>@color/skinTone4</item>
+        <item>@color/skinTone5</item>
+        <item>@color/skinTone6</item>
+        <item>@color/skinTone7</item>
+        <item>@color/skinTone8</item>
+        <item>@color/skinTone9</item>
+        <item>@color/skinTone10</item>
+        <item>@color/skinTone11</item>
+        <item>@color/skinTone12</item>
+        <item>@color/skinTone13</item>
+        <item>@color/skinTone14</item>
+        <item>@color/skinTone15</item>
+        <item>@color/skinTone16</item>
+        <item>@color/skinTone17</item>
+        <item>@color/skinTone18</item>
+        <item>@color/skinTone19</item>
+        <item>@color/skinTone20</item>
+        <item>@color/skinTone21</item>
+        <item>@color/skinTone22</item>
+        <item>@color/skinTone23</item>
+        <item>@color/skinTone24</item>
+        <item>@color/skinTone25</item>
+        <item>@color/skinTone26</item>
+        <item>@color/skinTone27</item>
+        <item>@color/skinTone28</item>
+        <item>@color/skinTone29</item>
+        <item>@color/skinTone30</item>
+        <item>@color/skinTone31</item>
+        <item>@color/skinTone32</item>
+        <item>@color/skinTone33</item>
+    </integer-array>
+</resources>
