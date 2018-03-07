@@ -28,7 +28,7 @@ object AvatarFactory { //set of avatar part id's (svg's)
             )
 
     val partcolors = arrayOf (
-            setOf("#f7e8a9","#ffd1ab","#ffd2d2","#d8e6b3","#ffd29d","#decbbc","#d2bcab", "#e3bb8d", "#cab26a", "#f9a824", "#dfa26f", "#d38d6f", "#c8909d", "#d5784d", "#b3723d","#a77b67", "#9a5b40", "#7c574f", "#854917", "#864d2c", "#723900", "#593b2b", "#42241a", "#3d0101" ), //SKINC
+            setOf("#f7e8a9","#ffd1ab","#ffd2d2","#d8e6b3","#ffd29d","#decbbc","#d2bcab", "#e3bb8d", "#cab26a", "#f9a824", "#dfa26f", "#d38d6f", "#090909", "#d5784d", "#b3723d","#a77b67", "#9a5b40", "#7c574f", "#854917", "#864d2c", "#723900", "#593b2b", "#42241a", "#3d0101" ), //SKINC
             setOf("#fffa84","#fbed66","#ffe12b","#e3dc3a","#e3dc3a","#c48647","#cc7227","#e76711","#a3672b","#a95712","#844b11","#733a00","#502f0c","#24150a","#090909","#cdc9d8","#dfe0df","#afbbe4", "#555755","#7c3030","#632929","#9f0000","#3a1212","#3d0101","#65245b","#811943","#e31d1d","#8524fc","#263ce3","#f94dac") //HAIRC
     )
 

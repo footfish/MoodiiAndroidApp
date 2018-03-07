@@ -12,7 +12,7 @@ data class Avatar(
         var noseId: String = "1",
         var mouthId: String = "1",
         var eyebrowsId: String = "1",
-        var eyebrowsColor: String = "",
-        var skinColor: String = "",
-        var hairColor: String = ""
+        var eyebrowsColor: String = "#502f0c",
+        var skinColor: String = "#e3bb8d",
+        var hairColor: String = "#502f0c"
         )
