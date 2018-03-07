@@ -4,13 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.moodii.app.MyAvatar">
+    tools:context="com.moodii.app.EditAvatar">
 
     <android.support.constraint.ConstraintLayout
-        android:id="@+id/constraintLayout2"
+        android:id="@+id/avatarLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginBottom="0dp"
         android:minWidth="360dp"
         app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
         app:layout_constraintEnd_toEndOf="parent"
@@ -87,7 +86,7 @@
             app:srcCompat="@drawable/mouth_neutral_1" />
 
         <ImageView
-            android:id="@+id/hairFront"
+            android:id="@+id/hairTop"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:tint="@color/skinTone26"
@@ -95,7 +94,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/head"
-            app:srcCompat="@drawable/hair_front_1" />
+            app:srcCompat="@drawable/hair_top_1" />
 
         <EditText
             android:id="@+id/editText"
@@ -110,16 +109,18 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <Button
-            android:id="@+id/button"
-            android:layout_width="50dp"
-            android:layout_height="48dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:onClick="tapButton"
-            android:text="Button"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+
+        <ImageButton
+            android:id="@+id/iconColorToggle"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="@android:color/transparent"
+            android:onClick="toggleColoringMode"
+            android:scaleType="fitCenter"
+            app:layout_constraintBottom_toBottomOf="@+id/hairTop"
+            app:layout_constraintEnd_toEndOf="@+id/hairTop"
+            app:srcCompat="@drawable/icon_color_selector" />
 
     </android.support.constraint.ConstraintLayout>
 
@@ -139,22 +140,24 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:clickable="false"
                 android:orientation="horizontal"
                 android:visibility="visible">
 
                 <ImageButton
-                    android:id="@+id/headButton"
-                    style="@style/Widget.AppCompat.ImageButton"
+                    android:id="@+id/buttonHead"
+                    style="@android:style/Widget.Material.ImageButton"
                     android:layout_width="60dp"
                     android:layout_height="75dp"
+                    android:background="@android:color/background_light"
                     android:scaleType="fitCenter"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/button_head" />
+                    app:srcCompat="@drawable/button_head_selector" />
 
                 <ImageButton
-                    android:id="@+id/hairFrontButton"
+                    android:id="@+id/buttonHairTop"
                     android:layout_width="60dp"
                     android:layout_height="match_parent"
                     android:background="?android:attr/windowBackground"
@@ -162,10 +165,10 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/button_hair_front" />
+                    app:srcCompat="@drawable/button_hair_top_selector" />
 
                 <ImageButton
-                    android:id="@+id/hairBackButton"
+                    android:id="@+id/buttonHairBack"
                     android:layout_width="60dp"
                     android:layout_height="match_parent"
                     android:background="?android:attr/windowBackground"
@@ -173,10 +176,10 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/button_hair_back" />
+                    app:srcCompat="@drawable/button_hair_back_selector" />
 
                 <ImageButton
-                    android:id="@+id/eyesButton"
+                    android:id="@+id/buttonEyes"
                     android:layout_width="60dp"
                     android:layout_height="match_parent"
                     android:background="?android:attr/windowBackground"
@@ -184,10 +187,10 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/button_eyes" />
+                    app:srcCompat="@drawable/button_eyes_selector" />
 
                 <ImageButton
-                    android:id="@+id/noseButton"
+                    android:id="@+id/buttonNose"
                     android:layout_width="60dp"
                     android:layout_height="match_parent"
                     android:background="?android:attr/windowBackground"
@@ -195,7 +198,31 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/button_nose" />
+                    app:srcCompat="@drawable/button_nose_selector" />
+
+                <ImageButton
+                    android:id="@+id/buttonMouth"
+                    android:layout_width="60dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="?android:attr/windowBackground"
+                    android:scaleType="fitCenter"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/button_mouth_selector" />
+
+                <ImageButton
+                    android:id="@+id/buttonEyebrows"
+                    android:layout_width="60dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="?android:attr/windowBackground"
+                    android:scaleType="fitCenter"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/button_eyebrows_selector" />
 
             </LinearLayout>
         </HorizontalScrollView>

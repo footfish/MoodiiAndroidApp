@@ -9,6 +9,10 @@
         <group
             android:translateX="4.839939"
             android:translateY="19.08944">
+            <path
+                android:pathData="M-4.839941 79.473099H153.91006V277.9106H-4.839941Z"
+                android:fillColor="#ffffff"
+                android:strokeMiterLimit="4" />
             <group
                 android:scaleX="0.2645833"
                 android:scaleY="0.2645833"
@@ -20,8 +24,10 @@
                     android:strokeMiterLimit="4" />
             </group>
             <group
-                android:translateX="-142.9245"
-                android:translateY="-29.66095">
+                android:scaleX="0.7532467"
+                android:scaleY="0.7532467"
+                android:translateX="-89.26559"
+                android:translateY="25.66801">
                 <path
                     android:pathData="M226.97956 231.63613c0 9.5596 -4.26227 11.48836 -9.52005 11.48836 -5.25778 0 -9.52005 -1.92876 -9.52005 -11.48836 0 -9.5596 9.52005 -26.30502 9.52005 -26.30502 0 0 9.52005 16.74542 9.52005 26.30502z"
                     android:fillColor="#2c5aa0"
