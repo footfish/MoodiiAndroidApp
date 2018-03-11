@@ -1,7 +1,6 @@
-package com.example.kevb.myfirstapp.helpers
+package com.moodii.app.helpers
 
 import android.content.Context
-import android.util.Log
 import android.view.View
 import android.view.MotionEvent
 import android.view.GestureDetector.SimpleOnGestureListener

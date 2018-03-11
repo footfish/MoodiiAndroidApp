@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/action_quit"
+        android:icon="@drawable/ic_icon_close"
+        android:title="@android:string/yes"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_save"
+        android:icon="@drawable/ic_icon_check"
+        android:title="@android:string/yes"
+        app:showAsAction="ifRoom" />
+
+</menu>
