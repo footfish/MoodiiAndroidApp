@@ -7,12 +7,14 @@ import android.os.Bundle
 import android.support.v7.widget.AppCompatImageButton
 import android.support.v7.widget.AppCompatImageView
 import android.util.Log
+import android.view.Menu
 import android.view.View
 import android.widget.ImageButton
 import android.widget.ImageView
 import com.example.kevb.myfirstapp.helpers.OnSwipeTouchListener
 import com.moodii.app.models.*
-
+import android.view.MenuInflater
+import android.view.MenuItem
 
 
 val avatar = Avatar() //nts: temp, move to main
@@ -20,9 +22,34 @@ private var selectedPart  = HEAD
 private var coloringMode  = false
 
 class EditAvatar : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
+
+
+    //Add the action buttons to Navbar
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.edit_avatar, menu)
+        return true
+    }
+
+    //Navbar actions
+    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
+        R.id.action_save -> {
+            Log.d("Action","Save")
+            true
+        }
+
+        R.id.action_quit -> {
+            Log.d("Action","Quit")
+            true
+        }
+       else -> { //action not recognised.
+            super.onOptionsItemSelected(item)
+        }
+    }
+        override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_avatar)
+        setSupportActionBar(findViewById(R.id.my_toolbar))
 
         val avatarViews = arrayOf (
                 findViewById<AppCompatImageView>(R.id.head),

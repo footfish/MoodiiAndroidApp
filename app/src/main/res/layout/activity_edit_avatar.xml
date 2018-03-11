@@ -6,15 +6,25 @@
     android:layout_height="match_parent"
     tools:context="com.moodii.app.EditAvatar">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/my_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+
     <android.support.constraint.ConstraintLayout
         android:id="@+id/avatarLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginTop="8dp"
         android:minWidth="360dp"
         app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/my_toolbar">
 
         <ImageView
             android:id="@+id/hairBack"
@@ -88,23 +98,29 @@
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/head"
+            app:layout_constraintVertical_bias="0.0"
             app:srcCompat="@drawable/hair_top_1" />
+
 
         <EditText
             android:id="@+id/editText"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:drawableLeft="@drawable/ic_icon_nametag"
+            android:drawablePadding="10dp"
+            android:drawableTint="@color/colorPrimary"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="Name"
+            android:maxLength="@integer/config_nameTagLength"
+            android:saveEnabled="false"
+            android:selectAllOnFocus="false"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/hairTop"
             app:layout_constraintTop_toTopOf="parent" />
-
 
         <ImageButton
             android:id="@+id/iconColorToggle"
@@ -129,99 +145,92 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent">
 
-        <HorizontalScrollView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="75dp"
+            android:clickable="false"
+            android:orientation="horizontal"
+            android:visibility="visible">
 
-            <LinearLayout
-                android:layout_width="wrap_content"
+            <ImageButton
+                android:id="@+id/buttonHead"
+                style="@android:style/Widget.Material.ImageButton"
+                android:layout_width="60dp"
                 android:layout_height="match_parent"
-                android:clickable="false"
-                android:orientation="horizontal"
-                android:visibility="visible">
+                android:layout_weight="1"
+                android:background="@android:color/background_light"
+                android:scaleType="fitCenter"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/button_head_selector" />
 
-                <ImageButton
-                    android:id="@+id/buttonHead"
-                    style="@android:style/Widget.Material.ImageButton"
-                    android:layout_width="60dp"
-                    android:layout_height="75dp"
-                    android:background="@android:color/background_light"
-                    android:scaleType="fitCenter"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/button_head_selector" />
+            <ImageButton
+                android:id="@+id/buttonHairTop"
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="?android:attr/windowBackground"
+                android:scaleType="fitCenter"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/button_hair_top_selector" />
 
-                <ImageButton
-                    android:id="@+id/buttonHairTop"
-                    android:layout_width="60dp"
-                    android:layout_height="match_parent"
-                    android:background="?android:attr/windowBackground"
-                    android:scaleType="fitCenter"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/button_hair_top_selector" />
+            <ImageButton
+                android:id="@+id/buttonHairBack"
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="?android:attr/windowBackground"
+                android:scaleType="fitCenter"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/button_hair_back_selector" />
 
-                <ImageButton
-                    android:id="@+id/buttonHairBack"
-                    android:layout_width="60dp"
-                    android:layout_height="match_parent"
-                    android:background="?android:attr/windowBackground"
-                    android:scaleType="fitCenter"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/button_hair_back_selector" />
+            <ImageButton
+                android:id="@+id/buttonEyes"
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="?android:attr/windowBackground"
+                android:scaleType="fitCenter"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/button_eyes_selector" />
 
-                <ImageButton
-                    android:id="@+id/buttonEyes"
-                    android:layout_width="60dp"
-                    android:layout_height="match_parent"
-                    android:background="?android:attr/windowBackground"
-                    android:scaleType="fitCenter"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/button_eyes_selector" />
+            <ImageButton
+                android:id="@+id/buttonNose"
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="?android:attr/windowBackground"
+                android:scaleType="fitCenter"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/button_nose_selector" />
 
-                <ImageButton
-                    android:id="@+id/buttonNose"
-                    android:layout_width="60dp"
-                    android:layout_height="match_parent"
-                    android:background="?android:attr/windowBackground"
-                    android:scaleType="fitCenter"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/button_nose_selector" />
+            <ImageButton
+                android:id="@+id/buttonMouth"
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="?android:attr/windowBackground"
+                android:scaleType="fitCenter"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/button_mouth_selector" />
 
-                <ImageButton
-                    android:id="@+id/buttonMouth"
-                    android:layout_width="60dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="?android:attr/windowBackground"
-                    android:scaleType="fitCenter"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/button_mouth_selector" />
+            <ImageButton
+                android:id="@+id/buttonEyebrows"
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="?android:attr/windowBackground"
+                android:scaleType="fitCenter"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/button_eyebrows_selector" />
 
-                <ImageButton
-                    android:id="@+id/buttonEyebrows"
-                    android:layout_width="60dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="?android:attr/windowBackground"
-                    android:scaleType="fitCenter"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/button_eyebrows_selector" />
-
-            </LinearLayout>
-        </HorizontalScrollView>
+        </LinearLayout>
 
     </android.support.constraint.ConstraintLayout>
 
