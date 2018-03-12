@@ -38,6 +38,7 @@ class EditAvatar : AppCompatActivity() {
             Log.d("Action","Save")
             val intent = Intent(this, MoodAvatar::class.java)
             startActivity(intent)
+            overridePendingTransition(0, 0) //stop flicker on activity change
             true
         }
 

@@ -131,7 +131,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="75dp"
+            android:layout_height="95dp"
             android:clickable="false"
             android:orientation="horizontal"
             android:visibility="visible">
@@ -139,8 +139,8 @@
             <ImageButton
                 android:id="@+id/buttonNeutral"
                 style="@android:style/Widget.Material.ImageButton"
-                android:layout_width="60dp"
                 android:layout_height="match_parent"
+                android:layout_width="70dp"
                 android:layout_weight="1"
                 android:background="@android:color/background_light"
                 android:scaleType="fitCenter"
@@ -150,7 +150,7 @@
 
             <ImageButton
                 android:id="@+id/buttonHappy"
-                android:layout_width="60dp"
+                android:layout_width="70dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="?android:attr/windowBackground"
@@ -161,7 +161,7 @@
 
             <ImageButton
                 android:id="@+id/buttonSad"
-                android:layout_width="60dp"
+                android:layout_width="70dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="?android:attr/windowBackground"
@@ -172,7 +172,7 @@
 
             <ImageButton
                 android:id="@+id/buttonScared"
-                android:layout_width="60dp"
+                android:layout_width="70dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="?android:attr/windowBackground"
@@ -183,7 +183,7 @@
 
             <ImageButton
                 android:id="@+id/buttonAngry"
-                android:layout_width="60dp"
+                android:layout_width="70dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="?android:attr/windowBackground"
@@ -194,7 +194,7 @@
 
             <ImageButton
                 android:id="@+id/buttonSurprised"
-                android:layout_width="60dp"
+                android:layout_width="70dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="?android:attr/windowBackground"

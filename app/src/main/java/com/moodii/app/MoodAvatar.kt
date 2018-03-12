@@ -1,5 +1,7 @@
 package com.moodii.app
 
+import android.content.Intent
+import android.content.Intent.FLAG_ACTIVITY_NO_ANIMATION
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Bundle
@@ -27,8 +29,10 @@ class MoodAvatar : AppCompatActivity() {
 
     //Navbar actions
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
-        R.id.action_save -> {
-            Log.d("Action", "Save")
+        R.id.action_edit -> {
+            val intent = Intent(this, EditAvatar::class.java)
+            startActivity(intent)
+            overridePendingTransition(0, 0) //stop flicker on activity change
             true
         }
 
