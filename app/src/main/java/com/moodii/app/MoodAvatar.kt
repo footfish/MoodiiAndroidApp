@@ -11,6 +11,7 @@ import android.support.v7.widget.AppCompatImageView
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.TextView
 import com.moodii.app.models.*
 
 //val avatar = Avatar() //nts: temp, move to main
@@ -33,6 +34,7 @@ class MoodAvatar : AppCompatActivity() {
             val intent = Intent(this, EditAvatar::class.java)
             startActivity(intent)
             overridePendingTransition(0, 0) //stop flicker on activity change
+            finish()
             true
         }
 
@@ -48,6 +50,8 @@ class MoodAvatar : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_mood_avatar)
         setSupportActionBar(findViewById(R.id.my_toolbar)) //add navbar
+        supportActionBar?.title = " " + avatar.nameTag
+            if (avatar.nameTag == "") supportActionBar?.setLogo(R.drawable.moodii_logo_sad) else supportActionBar?.setLogo(R.drawable.moodii_logo_happy)
 
         val avatarViews = arrayOf<AppCompatImageView> (
                 findViewById(R.id.head),

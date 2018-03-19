@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.AppCompatImageButton
 import android.support.v7.widget.AppCompatImageView
+import android.text.Editable
 import android.util.Log
 import android.view.Menu
 import android.view.View
@@ -16,14 +17,16 @@ import com.moodii.app.helpers.OnSwipeTouchListener
 import com.moodii.app.models.*
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.widget.EditText
+import kotlinx.android.synthetic.main.activity_edit_avatar.view.*
 
 
-val avatar = Avatar() //nts: temp, move to main
+val avatar = Avatar()
 private var selectedPart  = HEAD
 private var coloringMode  = false
 
 class EditAvatar : AppCompatActivity() {
-
+    lateinit var app: MoodiiApp
 
     //Add the action buttons to Navbar
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -39,6 +42,9 @@ class EditAvatar : AppCompatActivity() {
             val intent = Intent(this, MoodAvatar::class.java)
             startActivity(intent)
             overridePendingTransition(0, 0) //stop flicker on activity change
+            finish()
+            var nameTagView = findViewById<EditText>(R.id.textNameTag)
+            avatar.nameTag = nameTagView.text.toString()
             true
         }
 
@@ -51,11 +57,15 @@ class EditAvatar : AppCompatActivity() {
         }
     }
         override fun onCreate(savedInstanceState: Bundle?) {
+            app = application as MoodiiApp
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_avatar)
-        setSupportActionBar(findViewById(R.id.my_toolbar))
+        setSupportActionBar(findViewById(R.id.my_toolbar)) //add Nav bar
+        supportActionBar?.title = ""
+            if (avatar.nameTag == "") supportActionBar?.setLogo(R.drawable.moodii_logo_sad) else supportActionBar?.setLogo(R.drawable.moodii_logo_happy)
 
-        val avatarViews = arrayOf<AppCompatImageView> (
+            val avatarViews = arrayOf<AppCompatImageView> (
                 findViewById(R.id.head),
                 findViewById(R.id.hairTop),
                 findViewById(R.id.hairBack),
@@ -87,9 +97,12 @@ class EditAvatar : AppCompatActivity() {
         renderPartColor(avatarViews, HEAD)
         renderPartColor(avatarViews, HAIRTOP)
         renderPartColor(avatarViews, EYEBROWS)
+        //render name tag
+        var nameTagView = findViewById<EditText>(R.id.textNameTag)
+        nameTagView.setText(avatar.nameTag)
 
 
-        avatarViews[HEAD].setOnTouchListener(
+            avatarViews[HEAD].setOnTouchListener(
                 object : OnSwipeTouchListener(this) {
                     override fun onSwipeRight() {
                         if (!coloringMode) {

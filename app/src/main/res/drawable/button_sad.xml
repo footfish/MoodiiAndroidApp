@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:viewportWidth="158.75"
+    android:viewportHeight="198.4375"
+    android:width="600dp"
+    android:height="750dp">
+    <group
+        android:translateY="-98.56255">
+        <group
+            android:translateX="4.839939"
+            android:translateY="19.08944">
+            <path
+                android:pathData="M-4.839941 79.473099H153.91006V277.9106H-4.839941Z"
+                android:fillColor="#ffffff"
+                android:strokeMiterLimit="4" />
+            <group
+                android:scaleX="0.7532467"
+                android:scaleY="0.7532467"
+                android:translateX="-89.26559"
+                android:translateY="25.66801">
+                <path
+                    android:pathData="M226.97956 231.63613c0 9.5596 -4.26227 11.48836 -9.52005 11.48836 -5.25778 0 -9.52005 -1.92876 -9.52005 -11.48836 0 -9.5596 9.52005 -26.30502 9.52005 -26.30502 0 0 9.52005 16.74542 9.52005 26.30502z"
+                    android:fillColor="#2c5aa0"
+                    android:strokeMiterLimit="4" />
+            </group>
+            <path
+                android:pathData="M127.45172 185.30644A52.916664 52.916664 0 0 1 74.535057 238.22311 52.916664 52.916664 0 0 1 21.618393 185.30644 52.916664 52.916664 0 0 1 74.535057 132.38978 52.916664 52.916664 0 0 1 127.45172 185.30644Z"
+                android:fillColor="#b3b3b3"
+                android:strokeMiterLimit="4" />
+            <path
+                android:pathData="M62.418627 185.17043a5.8109422 5.8109422 0 0 1 -5.810942 5.81094 5.8109422 5.8109422 0 0 1 -5.810942 -5.81094 5.8109422 5.8109422 0 0 1 5.810942 -5.81095 5.8109422 5.8109422 0 0 1 5.810942 5.81095z"
+                android:fillColor="#ffffff"
+                android:strokeMiterLimit="4" />
+            <group
+                android:scaleX="-1">
+                <path
+                    android:pathData="M-86.651491 185.17043a5.8109422 5.8109488 0 0 1 -5.810942 5.81094 5.8109422 5.8109488 0 0 1 -5.810942 -5.81094 5.8109422 5.8109488 0 0 1 5.810942 -5.81095 5.8109422 5.8109488 0 0 1 5.810942 5.81095z"
+                    android:fillColor="#ffffff"
+                    android:strokeMiterLimit="4" />
+            </group>
+            <group
+                android:scaleX="1.511877"
+                android:scaleY="-0.9151772"
+                android:translateX="-28.5943"
+                android:translateY="423.5295">
+                <path
+                    android:pathData="M54.055622 226.3135q3.57033 2.96528 7.063053 4.40366 3.492723 1.43838 7.078581 1.43838 3.585867 0 7.109629 -1.43838 3.508243 -1.46051 7.063062 -4.40366v3.54063q-3.647954 3.31934 -7.171725 4.97901 -3.523763 1.63754 -7.000966 1.63754 -3.461675 0 -6.969918 -1.63754 -3.508242 -1.63754 -7.171716 -4.97901z"
+                    android:strokeLineCap="butt"
+                    android:fillColor="#ffffff"
+                    android:strokeLineJoin="miter" />
+            </group>
+            <path
+                android:pathData="M104.38193 175.14006q-2.51718 0.52013 -4.867023 0.52176 -2.349839 0.002 -4.648628 -0.50881 -2.298798 -0.51046 -4.44701 -1.5109 -2.13657 -1.0059 -4.188817 -2.53263l-0.272656 1.2279q2.082983 1.67044 4.214164 2.74762 2.132873 1.06952 4.362018 1.56451 2.219178 0.49277 4.594313 0.42426 2.375119 -0.0685 4.980989 -0.70582z"
+                android:strokeLineCap="butt"
+                android:fillColor="#ffffff"
+                android:strokeLineJoin="miter" />
+            <path
+                android:pathData="M44.688191 175.14006q2.51718 0.52013 4.86702 0.52176 2.34984 0.002 4.64863 -0.50881 2.29879 -0.51046 4.44701 -1.5109 2.13657 -1.0059 4.18881 -2.53263l0.27266 1.2279q-2.08298 1.67044 -4.21416 2.74762 -2.13288 1.06952 -4.36202 1.56451 -2.21918 0.49277 -4.59432 0.42426 -2.37511 -0.0685 -4.98098 -0.70582z"
+                android:strokeLineCap="butt"
+                android:fillColor="#ffffff"
+                android:strokeLineJoin="miter" />
+        </group>
+    </group>
+</vector>
