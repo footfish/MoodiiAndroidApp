@@ -5,7 +5,6 @@ package com.moodii.app.models
  */
 
 data class Avatar(
-        var nameTag: String = "",
         var headId: String = "1",
         var hairTopId: String = "1",
         var hairBackId: String = "1",

@@ -19,6 +19,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getTargetContext()
-        assertEquals("com.moodii.app", appContext.packageName)
+        assertEquals("com.mooder.app", appContext.packageName)
     }
 }

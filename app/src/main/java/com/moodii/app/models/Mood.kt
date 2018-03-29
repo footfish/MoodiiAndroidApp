@@ -1,21 +1,15 @@
 package com.moodii.app.models
 
-import java.security.MessageDigest
-import java.sql.Timestamp
-import java.util.*
-
 /**
  * Data class for storing mood
  */
 
 data class Mood(
-        var mood: String = "",
-        var shortMessage: String = "",
-        var timestamp: Timestamp? = null,
-        var IpV4: String? = null,
-        var IpV6: String? = null,
-        var country: String? = null,
-        var longtitude: Float = 0.0f,
-        var latitude: Float = 0.0f
-//NTS - best practice for sharing location  ?
+        var mood: String = "neutral",
+        var shout: String = "",
+        var timestamp: String = "",  //YYYY-MM-DDTHH:mm:ss.sssZ or ±YYYYYY-MM-DDTHH:mm:ss.sssZ - simplified extended ISO 8601 format - timezone is always zero UTC offset (Javascripts date's toJSON method)
+        var ipAddress: String = "",    //ipv4 / ipv6
+        var countryCode: String = "",  //iso code
+        var latitude: Double = 0.0,
+        var longitude: Double = 0.0
         )
