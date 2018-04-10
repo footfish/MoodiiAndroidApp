@@ -8,6 +8,9 @@
         android:title="@android:string/yes"
         app:showAsAction="ifRoom" />
     <item
+        android:id="@+id/action_saveMood"
+        android:title="Save" />
+    <item
         android:id="@+id/action_signOut"
         android:title="@string/menu_signOut" />
 </menu>

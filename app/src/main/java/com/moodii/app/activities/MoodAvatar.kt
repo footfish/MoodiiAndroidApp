@@ -10,15 +10,22 @@ import android.support.v7.widget.AppCompatImageView
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import com.moodii.app.R
+import com.moodii.app.api.MoodiiApi
 import com.moodii.app.models.*
+import com.moodii.app.models.AvatarFactory
+import java.lang.System.currentTimeMillis
+import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.OffsetDateTime
+import java.util.*
 
-//val avatar = Avatar() //nts: temp, move to main
+private var mooder = Mooder("","", Avatar(), Mood())
 private var selectedMood  = NEUTRAL
-
+private var mooderId = "0"
 
 class MoodAvatar : AppCompatActivity() {
-
 
     //Add the action buttons to Navbar
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -27,10 +34,11 @@ class MoodAvatar : AppCompatActivity() {
         return true
     }
 
-    //Navbar actions
+    //Handle Navbar actions
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         R.id.action_edit -> {
             val intent = Intent(this, EditAvatar::class.java)
+            intent.putExtra("mooderId", mooderId)
             startActivity(intent)
             overridePendingTransition(0, 0) //stop flicker on activity change
             finish()
@@ -44,21 +52,37 @@ class MoodAvatar : AppCompatActivity() {
             finish()
             true
         }
+        R.id.action_saveMood -> {
+            mooder.mood.mood=AvatarFactory.getMoodString(selectedMood)
+            mooder.mood.timestamp = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss:SSSZ", Locale.UK).format(Date())
 
+
+            Log.w("MoodAvatar", "saving with mooder " + mooderId + " " + mooder.mood.toString())
+            if (MoodiiApi.updateMood(mooderId, mooder.mood)) {
+                Toast.makeText(applicationContext, "Mood saved", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(applicationContext, "Failed to save (Internet connection?)", Toast.LENGTH_SHORT).show()
+            }
+            true
+        }
 
        else -> { //action not recognised.
             super.onOptionsItemSelected(item)
         }
     }
-        override fun onCreate(savedInstanceState: Bundle?) {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_mood_avatar)
-        setSupportActionBar(findViewById(R.id.my_toolbar)) //add navbar
+        //add navbar
+        setSupportActionBar(findViewById(R.id.my_toolbar))
         supportActionBar?.title = " " + mooder.nameTag
-            if (mooder.nameTag == "") supportActionBar?.setLogo(R.drawable.moodii_logo_sad) else supportActionBar?.setLogo(R.drawable.moodii_logo_happy)
+        if (mooder.nameTag == "") supportActionBar?.setLogo(R.drawable.moodii_logo_sad) else supportActionBar?.setLogo(R.drawable.moodii_logo_happy)
 
-         if(this.intent.hasExtra("accountId")) Log.w("LOGIN", "accountId passed " + this.intent.extras.getString("accountId")) //login
+        //set mooderId if passed (from SignIn)
+        if(this.intent.hasExtra("mooderId")) mooderId =this.intent.extras.getString("mooderId")
 
+        //init array of avatar parts
         val avatarViews = arrayOf<AppCompatImageView> (
                 findViewById(R.id.head),
                 findViewById(R.id.hairTop),
@@ -68,7 +92,7 @@ class MoodAvatar : AppCompatActivity() {
                 findViewById(R.id.mouth),
                 findViewById(R.id.eyebrows)
         )
-
+        //init array of mood buttons
         val buttonViews = arrayOf<AppCompatImageButton> (
                 findViewById(R.id.buttonNeutral),
                 findViewById(R.id.buttonHappy),
@@ -78,17 +102,26 @@ class MoodAvatar : AppCompatActivity() {
                 findViewById(R.id.buttonSurprised)
                 )
 
+        //load mooder we'll use
+        val tMooder = MoodiiApi.getMooder(mooderId)
+        if (tMooder != null) {
+            mooder = tMooder
+        }
+        //nts: implement failed load
+        Log.w("MoodAvatar", "starting with mooder " + mooder.toString())
+
         //init selected button
+        selectedMood  = AvatarFactory.getMoodInt(mooder.mood.mood)
         setButtonSelected(buttonViews, selectedMood)
 
         //set button listeners
-        for (i in NEUTRAL until buttonViews.size) buttonViews[i].setOnClickListener {
+        for (i in buttonViews.indices) buttonViews[i].setOnClickListener {
             setButtonSelected(buttonViews,i)
             renderMoodAvatar(avatarViews, i)
         }
 
         //render avatar
-        renderMoodAvatar(avatarViews, NEUTRAL)
+        renderMoodAvatar(avatarViews, selectedMood)
 
 /*
         avatarViews[HEAD].setOnTouchListener(
@@ -142,8 +175,8 @@ class MoodAvatar : AppCompatActivity() {
     }
 
     private fun renderMoodAvatar(avatarViews: Array<AppCompatImageView>, mood: Int) {
-        for ( partType in HEAD until avatarViews.size) {
-            avatarViews[partType].setImageResource(resources.getIdentifier(AvatarFactory.getResPart(avatar, partType, mood), "drawable", packageName))
+        for ( partType in avatarViews.indices) {
+            avatarViews[partType].setImageResource(resources.getIdentifier(AvatarFactory.getResPart(mooder.avatar, partType, mood), "drawable", packageName))
             renderPartColor(avatarViews,partType)
         }
     }
@@ -151,26 +184,25 @@ class MoodAvatar : AppCompatActivity() {
     private fun renderPartColor(v: Array<AppCompatImageView>, partType: Int) {
         when(partType) {
             HEAD -> {
-                v[HEAD].setColorFilter(Color.parseColor(avatar.skinColor), PorterDuff.Mode.SRC_ATOP)
+                v[HEAD].setColorFilter(Color.parseColor(mooder.avatar.skinColor), PorterDuff.Mode.SRC_ATOP)
             }
             HAIRTOP -> {
-                v[HAIRBACK].setColorFilter(Color.parseColor(avatar.hairColor), PorterDuff.Mode.SRC_ATOP)
-                v[HAIRTOP].setColorFilter(Color.parseColor(avatar.hairColor), PorterDuff.Mode.SRC_ATOP)
+                v[HAIRBACK].setColorFilter(Color.parseColor(mooder.avatar.hairColor), PorterDuff.Mode.SRC_ATOP)
+                v[HAIRTOP].setColorFilter(Color.parseColor(mooder.avatar.hairColor), PorterDuff.Mode.SRC_ATOP)
             }
             HAIRBACK-> {
-                v[HAIRBACK].setColorFilter(Color.parseColor(avatar.hairColor), PorterDuff.Mode.SRC_ATOP)
-                v[HAIRTOP].setColorFilter(Color.parseColor(avatar.hairColor), PorterDuff.Mode.SRC_ATOP)
+                v[HAIRBACK].setColorFilter(Color.parseColor(mooder.avatar.hairColor), PorterDuff.Mode.SRC_ATOP)
+                v[HAIRTOP].setColorFilter(Color.parseColor(mooder.avatar.hairColor), PorterDuff.Mode.SRC_ATOP)
             }
             EYEBROWS -> {
-                v[EYEBROWS].setColorFilter(Color.parseColor(avatar.eyebrowsColor), PorterDuff.Mode.SRC_ATOP)
+                v[EYEBROWS].setColorFilter(Color.parseColor(mooder.avatar.eyebrowsColor), PorterDuff.Mode.SRC_ATOP)
             }
         }
-
     }
 
     private fun setButtonSelected(buttonViews: Array<AppCompatImageButton>, selectedButton: Int) {
         selectedMood = selectedButton
-        for (i in NEUTRAL until buttonViews.size) buttonViews[i].isSelected = (i == selectedButton) //highlights the selected button
+        for (i in buttonViews.indices) buttonViews[i].isSelected = (i == selectedButton) //highlights the selected button
         }
 
 }

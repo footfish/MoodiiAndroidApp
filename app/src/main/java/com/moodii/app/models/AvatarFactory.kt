@@ -1,8 +1,5 @@
 package com.moodii.app.models
 
-import com.moodii.app.R.id.head
-import com.moodii.app.R.id.parent
-
 const val HEAD = 0
 const val HAIRTOP = 1
 const val HAIRBACK = 2
@@ -11,20 +8,16 @@ const val NOSE = 4
 const val MOUTH = 5
 const val EYEBROWS = 6
 const val NEUTRAL = 0
-const val HAPPY = 1
-const val SAD = 2
-const val SCARED = 3
-const val ANGRY = 4
-const val SURPRISED = 5
 private const val SKINC = 0
 private const val HAIRC = 1
 
 
 
 /**
- * Created by kevb on 25/02/2018.
+ * Arbitrary helper functions for building Avatar
  */
 object AvatarFactory { //set of avatar part id's (svg's)
+    private val moods  = arrayOf ("neutral","happy","sad","scared","angry","surprised")
     private val parts = arrayOf ( setOf("1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24"), //HEAD
             setOf("1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20"), //HAIRTOP
             setOf("1","2","3","4","5","6","7","8","9"), //HAIRBACK
@@ -44,31 +37,10 @@ object AvatarFactory { //set of avatar part id's (svg's)
         return( when (partType){
             HAIRTOP -> "hair_top_" + avatar.hairTopId
             HAIRBACK -> "hair_back_" + avatar.hairBackId
-            EYES -> when(mood) {
-                HAPPY -> "eyes_happy_" + avatar.eyesId
-                SAD -> "eyes_sad_" + avatar.eyesId
-                SCARED -> "eyes_scared_" + avatar.eyesId
-                ANGRY -> "eyes_angry_" + avatar.eyesId
-                SURPRISED -> "eyes_surprised_" + avatar.eyesId
-                else ->  "eyes_neutral_" + avatar.eyesId
-            }
+            EYES -> "eyes_" + moods[mood] + "_" + avatar.eyesId
             NOSE -> "nose_" + avatar.noseId
-            MOUTH -> when(mood) {
-                HAPPY -> "mouth_happy_" + avatar.mouthId
-                SAD -> "mouth_sad_" + avatar.mouthId
-                SCARED -> "mouth_scared_" + avatar.mouthId
-                ANGRY -> "mouth_angry_" + avatar.mouthId
-                SURPRISED -> "mouth_surprised_" + avatar.mouthId
-                else -> "mouth_neutral_" + avatar.mouthId
-            }
-            EYEBROWS -> when(mood) {
-                HAPPY ->   "eyebrows_happy_" + avatar.eyebrowsId
-                SAD ->   "eyebrows_sad_" + avatar.eyebrowsId
-                SCARED ->   "eyebrows_scared_" + avatar.eyebrowsId
-                ANGRY ->   "eyebrows_angry_" + avatar.eyebrowsId
-                SURPRISED ->   "eyebrows_surprised_" + avatar.eyebrowsId
-                else ->   "eyebrows_neutral_" + avatar.eyebrowsId
-            }
+            MOUTH -> "mouth_" + moods[mood] + "_" + avatar.mouthId
+            EYEBROWS ->  "eyebrows_" + moods[mood] + "_" + avatar.eyebrowsId
             else -> "head_" + avatar.headId // HEAD/default
         })
     }
@@ -102,6 +74,20 @@ object AvatarFactory { //set of avatar part id's (svg's)
             else -> getNext(partcolors[SKINC], id)  // HEAD/default
         })
     }
+
+    //convert mood passed as Int to String
+    fun getMoodString(mood: Int): String{
+        return(moods[mood])
+    }
+
+    //convert mood passed as String to Int
+    fun getMoodInt(mood: String): Int{
+        for (i in moods.indices) {
+            if (moods[i] == mood.toLowerCase()) return i
+        }
+    return NEUTRAL //default return
+    }
+
 
     //Gets the next 'id' from the set in circular fashion
     private fun getNext(set: Set<String>, id: String): String {

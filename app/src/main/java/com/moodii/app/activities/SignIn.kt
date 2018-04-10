@@ -7,11 +7,14 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.moodii.app.R
 import android.content.Intent
+import android.util.Log
 import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.ApiException
-import android.util.Log
+import android.widget.Toast
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInStatusCodes.getStatusCodeString
 import com.google.android.gms.tasks.Task
+import com.moodii.app.api.MoodiiApi
 
 private const val RC_SIGN_IN = 107 // request code for starting sign on activity (this can be any number).
 
@@ -23,7 +26,10 @@ class SignIn : AppCompatActivity() {
         setContentView(R.layout.activity_sign_in)
 
         // Configure sign-in options
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build()
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.server_client_id)) //backend client_id
+                .requestEmail()
+                .build()
 
         // Build GoogleSignInClient with the options specified by gso.
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
@@ -58,15 +64,31 @@ class SignIn : AppCompatActivity() {
         } catch (e: ApiException) {
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
-            Log.w("LOGIN", "signInResult:failed code=" + e.statusCode)
+            Toast.makeText(this,  "Oops! " + getStatusCodeString(e.statusCode), Toast.LENGTH_SHORT).show()
         }
     }
 
     private fun startMoodii(account: GoogleSignInAccount) {
-        val intent = Intent(this, MoodAvatar::class.java)
-        intent.putExtra("accountId",account.id) //nts.. should be verifying properly with tokenid
+        val intent: Intent
+        val token: String? = account.idToken
+        Log.w("LOGIN","idToken is " + account.idToken)
+        if (token != null) {
+            val mooderId = MoodiiApi.getId(token)
+            Log.w("LOGIN","MooderId is " + mooderId)
+            if (mooderId != null) {
+                intent = Intent(this, MoodAvatar::class.java)
+                intent.putExtra("mooderId", mooderId)
+            } else { //no mooder Id, login again
+                //nts: put better handling here for no connection
+                intent = Intent(this, SignIn::class.java)
+                intent.putExtra("signOut",true)
+                Toast.makeText(applicationContext, "Failed (Internet connection active?)", Toast.LENGTH_SHORT).show()
+            }
+        } else { //no google token, login again
+            intent = Intent(this, SignIn::class.java)
+            intent.putExtra("signOut",true)
+        }
         startActivity(intent)
-        overridePendingTransition(0, 0) //stop flicker on activity change
         finish() //forget back button
     }
 }
