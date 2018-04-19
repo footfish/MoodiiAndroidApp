@@ -5,11 +5,11 @@
     <item
         android:id="@+id/action_edit"
         android:icon="@drawable/icon_edit"
-        android:title="@android:string/yes"
-        app:showAsAction="ifRoom" />
+        android:title="Edit Avatar" />
+ />
     <item
         android:id="@+id/action_saveMood"
-        android:title="Save" />
+        android:title="Save to Cloud" />
     <item
         android:id="@+id/action_signOut"
         android:title="@string/menu_signOut" />

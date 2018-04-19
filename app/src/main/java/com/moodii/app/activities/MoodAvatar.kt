@@ -1,15 +1,19 @@
 package com.moodii.app.activities
 
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Bundle
+import android.support.design.widget.FloatingActionButton
+import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.AppCompatImageButton
 import android.support.v7.widget.AppCompatImageView
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import com.moodii.app.R
 import com.moodii.app.api.MoodiiApi
@@ -53,16 +57,7 @@ class MoodAvatar : AppCompatActivity() {
             true
         }
         R.id.action_saveMood -> {
-            mooder.mood.mood=AvatarFactory.getMoodString(selectedMood)
-            mooder.mood.timestamp = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss:SSSZ", Locale.UK).format(Date())
-
-
-            Log.w("MoodAvatar", "saving with mooder " + mooderId + " " + mooder.mood.toString())
-            if (MoodiiApi.updateMood(mooderId, mooder.mood)) {
-                Toast.makeText(applicationContext, "Mood saved", Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(applicationContext, "Failed to save (Internet connection?)", Toast.LENGTH_SHORT).show()
-            }
+            saveMood()
             true
         }
 
@@ -70,6 +65,7 @@ class MoodAvatar : AppCompatActivity() {
             super.onOptionsItemSelected(item)
         }
     }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,6 +77,10 @@ class MoodAvatar : AppCompatActivity() {
 
         //set mooderId if passed (from SignIn)
         if(this.intent.hasExtra("mooderId")) mooderId =this.intent.extras.getString("mooderId")
+
+
+        //set listener for cloud save button
+        findViewById<FloatingActionButton>(R.id.cloudButton).setOnClickListener({saveMood()})
 
         //init array of avatar parts
         val avatarViews = arrayOf<AppCompatImageView> (
@@ -110,13 +110,14 @@ class MoodAvatar : AppCompatActivity() {
         //nts: implement failed load
         Log.w("MoodAvatar", "starting with mooder " + mooder.toString())
 
-        //init selected button
+        //init buttons
         selectedMood  = AvatarFactory.getMoodInt(mooder.mood.mood)
         setButtonSelected(buttonViews, selectedMood)
+        setCloudButton(true)
 
         //set button listeners
         for (i in buttonViews.indices) buttonViews[i].setOnClickListener {
-            setButtonSelected(buttonViews,i)
+            setButtonSelected(buttonViews, i)
             renderMoodAvatar(avatarViews, i)
         }
 
@@ -201,8 +202,38 @@ class MoodAvatar : AppCompatActivity() {
     }
 
     private fun setButtonSelected(buttonViews: Array<AppCompatImageButton>, selectedButton: Int) {
-        selectedMood = selectedButton
-        for (i in buttonViews.indices) buttonViews[i].isSelected = (i == selectedButton) //highlights the selected button
+        if (!buttonViews[selectedButton].isSelected) {
+            selectedMood = selectedButton
+            for (i in buttonViews.indices) buttonViews[i].isSelected = (i == selectedButton) //highlights the selected button
+            setCloudButton(false)
         }
+    }
+
+    private fun saveMood(){
+        mooder.mood.mood=AvatarFactory.getMoodString(selectedMood)
+        mooder.mood.timestamp = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss:SSSZ", Locale.UK).format(Date())
+
+
+        Log.w("MoodAvatar", "saving with mooder " + mooderId + " " + mooder.mood.toString())
+        if (MoodiiApi.updateMood(mooderId, mooder.mood)) {
+            Toast.makeText(applicationContext, "Mood saved", Toast.LENGTH_SHORT).show()
+            setCloudButton(true)
+        } else {
+            Toast.makeText(applicationContext, "Failed to save (Internet connection?)", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun setCloudButton(stored: Boolean) {
+        val cloudButton = findViewById<FloatingActionButton>(R.id.cloudButton)
+        if (stored) {
+            cloudButton.setImageResource(R.drawable.ic_cloud_done)
+            cloudButton.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.colorFloatingButtonSaved))
+        } else {
+            //reset floating saved button
+            cloudButton.setImageResource(R.drawable.ic_cloud_upload)
+            cloudButton.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.colorFloatingButton))
+        }
+
+    }
 
 }

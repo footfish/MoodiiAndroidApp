@@ -44,12 +44,16 @@ object MoodiiApi {
         moodiiClient = retrofit.create(MoodiiClient::class.java)
     }
 
-    fun getId(token: String): String? {// - verify user on moodii api and returns a UID for moodii client, creates if does not exist.
+    data class IdResult(var resultCode: Int?, var uid: String?)
+    // - verify user on moodii api and returns a UID for moodii client, creates if does not exist.
+    // http resultCode 201 for new instance
+    fun getId(token: String): IdResult {
         val call = moodiiClient.getId(token)
         val result = async { try {call.execute()} catch (e:Exception) {return@async null} } //use co-routines to act like synchronous call
-        val mooder = runBlocking { result.await()?.body() } //use Mooder model to get 'id'
-        return mooder?.id
-        //nts: need fault handling here
+        val response = runBlocking { result.await() } //use Mooder model to get 'id'
+        val idResult = IdResult(response?.code(),response?.body()?.id)
+        if ((idResult.resultCode == 200 || idResult.resultCode == 201 ) && idResult.uid == null) idResult.resultCode = 500 //should always have uid if response is success 
+        return idResult
     }
 
     fun getMooder(uid: String): Mooder? {

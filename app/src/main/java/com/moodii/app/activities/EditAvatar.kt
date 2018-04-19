@@ -1,10 +1,15 @@
 package com.moodii.app.activities
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.PorterDuff
+import android.location.Location
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v4.app.ActivityCompat
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.AppCompatImageButton
 import android.support.v7.widget.AppCompatImageView
 import android.util.Log
@@ -17,6 +22,8 @@ import android.view.MenuItem
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.Toast
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.moodii.app.MoodiiApp
 import com.moodii.app.R
 import com.moodii.app.api.MoodiiApi
@@ -30,6 +37,7 @@ private var coloringMode  = false
 
 class EditAvatar : AppCompatActivity() {
     lateinit var app: MoodiiApp
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     //Add the action buttons to Navbar
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -42,7 +50,29 @@ class EditAvatar : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         R.id.action_save -> {
             if (MoodiiApi.updateAvatar(mooderId, mooder.avatar)) {
+
+                //location
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION )
+                        != PackageManager.PERMISSION_GRANTED) {
+                    // Permission is not granted
+
+                    //request permission
+                    ActivityCompat.requestPermissions(this,
+                            arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION),
+                            4501)
+//                            MY_PERMISSION_ACCESS_COURSE_LOCATION)
+
+                }
+
+                fusedLocationClient.lastLocation
+                        .addOnSuccessListener { location : Location? ->
+                            Log.w("EditAvatar", "locaton" + location.toString())
+                            // Got last known location. In some rare situations this can be null.
+                        }
+
+
                 val intent = Intent(this, MoodAvatar::class.java)
+                intent.putExtra("mooderId", mooderId)
                 startActivity(intent)
                 overridePendingTransition(0, 0) //stop flicker on activity change
                 finish() //forget back button
@@ -56,6 +86,7 @@ class EditAvatar : AppCompatActivity() {
 
         R.id.action_quit -> {
             val intent = Intent(this, MoodAvatar::class.java)
+            intent.putExtra("mooderId", mooderId)
             startActivity(intent)
             overridePendingTransition(0, 0) //stop flicker on activity change
             finish() //forget back button
@@ -70,6 +101,8 @@ class EditAvatar : AppCompatActivity() {
         app = application as MoodiiApp
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_avatar)
+
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         //add Nav bar
         setSupportActionBar(findViewById(R.id.my_toolbar))

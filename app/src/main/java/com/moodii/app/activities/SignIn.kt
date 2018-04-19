@@ -27,7 +27,7 @@ class SignIn : AppCompatActivity() {
 
         // Configure sign-in options
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.server_client_id)) //backend client_id
+                .requestIdToken(getString(R.string.server_client_id)) //backend client_id setup on dev. console
                 .requestEmail()
                 .build()
 
@@ -73,16 +73,22 @@ class SignIn : AppCompatActivity() {
         val token: String? = account.idToken
         Log.w("LOGIN","idToken is " + account.idToken)
         if (token != null) {
-            val mooderId = MoodiiApi.getId(token)
+            val (resultCode, mooderId) = MoodiiApi.getId(token)
             Log.w("LOGIN","MooderId is " + mooderId)
-            if (mooderId != null) {
-                intent = Intent(this, MoodAvatar::class.java)
-                intent.putExtra("mooderId", mooderId)
-            } else { //no mooder Id, login again
-                //nts: put better handling here for no connection
-                intent = Intent(this, SignIn::class.java)
-                intent.putExtra("signOut",true)
-                Toast.makeText(applicationContext, "Failed (Internet connection active?)", Toast.LENGTH_SHORT).show()
+            when (resultCode) {
+                200 -> { //retrieved existing mooder
+                    intent = Intent(this, MoodAvatar::class.java)
+                    intent.putExtra("mooderId", mooderId)
+                }
+                201 -> { //new mooder
+                    intent = Intent(this, EditAvatar::class.java)
+                    intent.putExtra("mooderId", mooderId)
+                }
+                else -> { //no mooder Id, login again
+                    intent = Intent(this, SignIn::class.java)
+                    intent.putExtra("signOut",true)
+                    Toast.makeText(applicationContext, "Failed (Internet connection active?)", Toast.LENGTH_SHORT).show()
+                }
             }
         } else { //no google token, login again
             intent = Intent(this, SignIn::class.java)
