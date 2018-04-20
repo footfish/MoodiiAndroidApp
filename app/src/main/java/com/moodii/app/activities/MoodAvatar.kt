@@ -1,5 +1,6 @@
 package com.moodii.app.activities
 
+import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
@@ -20,6 +21,19 @@ import com.moodii.app.models.*
 import com.moodii.app.models.AvatarFactory
 import java.text.SimpleDateFormat
 import java.util.*
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.net.Uri
+import android.os.Environment
+import android.os.StrictMode
+import android.support.constraint.ConstraintLayout
+import android.support.v4.content.FileProvider
+import android.view.View
+import android.widget.ImageView
+import com.moodii.app.BuildConfig
+import java.io.File
+import java.io.FileOutputStream
+
 
 private var mooder = Mooder("","","", Avatar(), Mood())
 private var selectedMood  = NEUTRAL
@@ -66,7 +80,25 @@ class MoodAvatar : AppCompatActivity() {
             startActivity(sendIntent)
             true
         }
+        R.id.action_shareMoodImage -> {
+            //save to bitmap
+            val avatarLayoutView = findViewById<ConstraintLayout>(R.id.avatarLayout)
+            val bitmap = viewToBitmap(avatarLayoutView)
 
+            val file = File.createTempFile("avatar", ".png", this.cacheDir)
+            Log.w("MoodAvatar", "Storing to file " + file.toString())
+            val output = FileOutputStream(file)
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, output)
+            output.close()
+            val sendIntent = Intent()
+            val contentUri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".fileprovider", file)
+            sendIntent.action = Intent.ACTION_SEND
+            sendIntent.putExtra(Intent.EXTRA_STREAM, contentUri)
+            sendIntent.type = "img/png"
+            startActivity(sendIntent)
+
+            true
+        }
 
 
         else -> { //action not recognised.
@@ -131,6 +163,8 @@ class MoodAvatar : AppCompatActivity() {
 
         //render avatar
         renderMoodAvatar(avatarViews, selectedMood)
+
+
 
 /*
         avatarViews[HEAD].setOnTouchListener(
@@ -242,6 +276,13 @@ class MoodAvatar : AppCompatActivity() {
             cloudButton.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.colorFloatingButton))
         }
 
+    }
+
+    fun viewToBitmap(view: View): Bitmap {  //careful where this is called, views must have been created width/height will be zero
+        val bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        view.draw(canvas)
+        return bitmap
     }
 
 }
