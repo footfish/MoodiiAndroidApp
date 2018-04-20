@@ -29,7 +29,7 @@ import com.moodii.app.R
 import com.moodii.app.api.MoodiiApi
 
 
-private var mooder = Mooder("","", Avatar(), Mood())
+private var mooder = Mooder("", "","", Avatar(), Mood())
 private var mooderId = "0"
 
 private var selectedPart  = HEAD

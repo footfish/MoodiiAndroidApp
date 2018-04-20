@@ -5,6 +5,7 @@ package com.moodii.app.models
  */
 data class Mooder(
         var id: String = "", //UID
+        var hash: String = "", //hash of email address
         var nameTag: String = "",
         var avatar: Avatar,
         var mood: Mood

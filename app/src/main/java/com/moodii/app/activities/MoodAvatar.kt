@@ -13,21 +13,18 @@ import android.support.v7.widget.AppCompatImageView
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.widget.Toast
 import com.moodii.app.R
 import com.moodii.app.api.MoodiiApi
 import com.moodii.app.models.*
 import com.moodii.app.models.AvatarFactory
-import java.lang.System.currentTimeMillis
 import java.text.SimpleDateFormat
-import java.time.LocalDateTime
-import java.time.OffsetDateTime
 import java.util.*
 
-private var mooder = Mooder("","", Avatar(), Mood())
+private var mooder = Mooder("","","", Avatar(), Mood())
 private var selectedMood  = NEUTRAL
 private var mooderId = "0"
+private const val MOODIIURL = "http://www.moodii.com/"
 
 class MoodAvatar : AppCompatActivity() {
 
@@ -60,8 +57,19 @@ class MoodAvatar : AppCompatActivity() {
             saveMood()
             true
         }
+        R.id.action_shareMoodLink -> {
+            saveMood()
+            val sendIntent = Intent()
+            sendIntent.action = Intent.ACTION_SEND
+            sendIntent.putExtra(Intent.EXTRA_TEXT,  MOODIIURL+"avatar/"+ mooder.hash+".png")
+            sendIntent.type = "text/plain"
+            startActivity(sendIntent)
+            true
+        }
 
-       else -> { //action not recognised.
+
+
+        else -> { //action not recognised.
             super.onOptionsItemSelected(item)
         }
     }
