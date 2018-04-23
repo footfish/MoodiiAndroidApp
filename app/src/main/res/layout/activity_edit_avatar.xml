@@ -15,6 +15,30 @@
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
+    <ImageView
+        android:id="@+id/imageSwipeLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:tint="@color/colorSwipeIcon"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_chevron_left" />
+
+    <ImageView
+        android:id="@+id/imageSwipeRight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:tint="@color/colorSwipeIcon"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_chevron_righ" />
+
     <android.support.constraint.ConstraintLayout
         android:id="@+id/avatarLayout"
         android:layout_width="match_parent"
@@ -93,8 +117,10 @@
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/head"
+            app:layout_constraintVertical_bias="0.0"
             app:srcCompat="@drawable/hair_top_1" />
 
 
@@ -118,15 +144,25 @@
 
         <ImageButton
             android:id="@+id/iconColorToggle"
-            android:layout_width="75dp"
-            android:layout_height="75dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:layout_marginBottom="16dp"
             android:backgroundTint="@android:color/transparent"
             android:onClick="toggleColoringMode"
-            android:scaleType="fitCenter"
             app:layout_constraintBottom_toBottomOf="@+id/hairTop"
             app:layout_constraintEnd_toEndOf="@+id/hairTop"
             app:srcCompat="@drawable/icon_color_selector" />
+
+        <ImageButton
+            android:id="@+id/iconFaceToggle"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="@android:color/transparent"
+            android:onClick="toggleColoringMode"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/iconColorToggle"
+            app:srcCompat="@drawable/icon_face_selector" />
 
     </android.support.constraint.ConstraintLayout>
 

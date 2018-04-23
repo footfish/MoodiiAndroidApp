@@ -3,21 +3,17 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/action_shareMoodImage"
-        android:icon="@drawable/ic_share"
-        android:title="@string/menu_share_image"
-        app:showAsAction="ifRoom"
-        />
+        android:id="@+id/action_shareMoodCloud"
+        android:title="@string/menu_share_mood" />
     <item
         android:id="@+id/action_shareMoodLink"
-        android:title="@string/menu_share_link"
-        />
+        android:title="@string/menu_share_link"        />
+    <item
+        android:id="@+id/action_shareMoodImage"
+        android:title="@string/menu_share_image"        />
     <item
         android:id="@+id/action_edit"
         android:title="@string/menu_edit" />
-    <item
-        android:id="@+id/action_saveMood"
-        android:title="@string/menu_save" />
     <item
         android:id="@+id/action_signOut"
         android:title="@string/menu_signOut" />

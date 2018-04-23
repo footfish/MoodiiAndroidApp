@@ -2,7 +2,7 @@
     <string name="app_name">Moodii</string>
     <string name="menu_signOut">Sign Out</string>
     <string name="menu_edit">Edit Avatar</string>
-    <string name="menu_save">Save to Cloud</string>
-    <string name="menu_share_image">Share Image</string>
-    <string name="menu_share_link">Share Link</string>
+    <string name="menu_share_mood">Share Moodii</string>
+    <string name="menu_share_image">Share Image to App</string>
+    <string name="menu_share_link">Share Link to App</string>
 </resources>

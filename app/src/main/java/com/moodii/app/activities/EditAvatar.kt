@@ -149,11 +149,12 @@ class EditAvatar : AppCompatActivity() {
         //nts: implement failed load
         Log.w("EditAvatar", "starting with mooder " + mooder.toString())
 
-        val iconToggleColorView= findViewById<ImageButton>(R.id.iconColorToggle)
-        //init selected button
-        setButtonSelected(buttonViews, selectedPart,iconToggleColorView)
+
+        //init selected buttons
+        toggleColoringMode(findViewById<ImageButton>(R.id.iconFaceToggle))
+        setButtonSelected(buttonViews, selectedPart)
         //set button listeners
-        for (i in buttonViews.indices) buttonViews[i].setOnClickListener { setButtonSelected(buttonViews,i,iconToggleColorView)}
+        for (i in buttonViews.indices) buttonViews[i].setOnClickListener { setButtonSelected(buttonViews,i)}
 
         //render avatar parts
         for (i in avatarViews.indices) renderPart(avatarViews[i],i)
@@ -166,7 +167,7 @@ class EditAvatar : AppCompatActivity() {
         nameTagView.setText(mooder.nameTag)
 
 
-            avatarViews[HEAD].setOnTouchListener(
+        (avatarViews[HEAD] as View).setOnTouchListener(  //avatarViews[] cast as View as View will override performClick (otherwise warning)
                 object : OnSwipeTouchListener(this) {
                     override fun onSwipeRight() {
                         if (!coloringMode) {
@@ -241,34 +242,37 @@ class EditAvatar : AppCompatActivity() {
 
     }
 
-    private fun setButtonSelected(buttonViews: Array<AppCompatImageButton>, selectedButton: Int, iconToggleColorView: ImageView) {
+    private fun setButtonSelected(buttonViews: Array<AppCompatImageButton>, selectedButton: Int ) {
         selectedPart = selectedButton
-         iconToggleColorView.isSelected = coloringMode
+        val colorButton= findViewById<ImageButton>(R.id.iconColorToggle)
+         colorButton.isSelected = coloringMode
         for (i in buttonViews.indices) buttonViews[i].isSelected = (i == selectedButton) //highlights the selected button
         when(selectedButton){
-            HEAD -> iconToggleColorView.visibility = View.VISIBLE
-            HAIRTOP -> iconToggleColorView.visibility=View.VISIBLE
-            HAIRBACK-> iconToggleColorView.visibility=View.VISIBLE
-            EYEBROWS -> iconToggleColorView.visibility=View.VISIBLE
+            HEAD -> colorButton.visibility = View.VISIBLE
+            HAIRTOP -> colorButton.visibility=View.VISIBLE
+            HAIRBACK-> colorButton.visibility=View.VISIBLE
+            EYEBROWS -> colorButton.visibility=View.VISIBLE
             MOUTH -> {
-                iconToggleColorView.visibility=View.GONE
-                coloringMode = false
+                colorButton.visibility=View.GONE
+                toggleColoringMode(findViewById<ImageButton>(R.id.iconFaceToggle))
             }
             EYES -> {
-                iconToggleColorView.visibility=View.GONE
-                coloringMode = false
+                colorButton.visibility=View.GONE
+                toggleColoringMode(findViewById<ImageButton>(R.id.iconFaceToggle))
             }
             NOSE -> {
-                iconToggleColorView.visibility=View.GONE
-                coloringMode = false
+                colorButton.visibility=View.GONE
+                toggleColoringMode(findViewById<ImageButton>(R.id.iconFaceToggle))
             }
         }
     }
 
     fun toggleColoringMode(v: View){
-        coloringMode = !coloringMode
-        v.isSelected = coloringMode
+        val faceButton = findViewById<ImageButton>(R.id.iconFaceToggle)
+        val colorButton =  findViewById<ImageButton>(R.id.iconColorToggle)
+        coloringMode = (v == colorButton)
+        faceButton.isSelected = !coloringMode
+        colorButton.isSelected = coloringMode
     }
-
 
 }

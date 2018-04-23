@@ -23,14 +23,11 @@ import java.text.SimpleDateFormat
 import java.util.*
 import android.graphics.Bitmap
 import android.graphics.Canvas
-import android.net.Uri
-import android.os.Environment
-import android.os.StrictMode
 import android.support.constraint.ConstraintLayout
 import android.support.v4.content.FileProvider
 import android.view.View
-import android.widget.ImageView
 import com.moodii.app.BuildConfig
+import com.moodii.app.helpers.OnSwipeTouchListener
 import java.io.File
 import java.io.FileOutputStream
 
@@ -67,17 +64,17 @@ class MoodAvatar : AppCompatActivity() {
             finish()
             true
         }
-        R.id.action_saveMood -> {
+        R.id.action_shareMoodCloud -> {
             saveMood()
             true
         }
         R.id.action_shareMoodLink -> {
-            saveMood()
             val sendIntent = Intent()
             sendIntent.action = Intent.ACTION_SEND
             sendIntent.putExtra(Intent.EXTRA_TEXT,  MOODIIURL+"avatar/"+ mooder.hash+".png")
+            sendIntent.putExtra(Intent.EXTRA_SUBJECT,  "This is how I feel..")
             sendIntent.type = "text/plain"
-            startActivity(sendIntent)
+            startActivity(Intent.createChooser(sendIntent, "Share link using"))
             true
         }
         R.id.action_shareMoodImage -> {
@@ -85,7 +82,7 @@ class MoodAvatar : AppCompatActivity() {
             val avatarLayoutView = findViewById<ConstraintLayout>(R.id.avatarLayout)
             val bitmap = viewToBitmap(avatarLayoutView)
 
-            val file = File.createTempFile("avatar", ".png", this.cacheDir)
+            val file = File(this.cacheDir, "myMoodii.png")
             Log.w("MoodAvatar", "Storing to file " + file.toString())
             val output = FileOutputStream(file)
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, output)
@@ -94,9 +91,9 @@ class MoodAvatar : AppCompatActivity() {
             val contentUri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".fileprovider", file)
             sendIntent.action = Intent.ACTION_SEND
             sendIntent.putExtra(Intent.EXTRA_STREAM, contentUri)
+            sendIntent.putExtra(Intent.EXTRA_SUBJECT,  "This is how I feel..")
             sendIntent.type = "img/png"
-            startActivity(sendIntent)
-
+            startActivity(Intent.createChooser(sendIntent, "Share image using"))
             true
         }
 
@@ -119,8 +116,8 @@ class MoodAvatar : AppCompatActivity() {
         if(this.intent.hasExtra("mooderId")) mooderId =this.intent.extras.getString("mooderId")
 
 
-        //set listener for cloud save button
-        findViewById<FloatingActionButton>(R.id.cloudButton).setOnClickListener({saveMood()})
+        //set listener for floating share button
+        findViewById<FloatingActionButton>(R.id.shareButton).setOnClickListener({saveMood()})
 
         //init array of avatar parts
         val avatarViews = arrayOf<AppCompatImageView> (
@@ -153,7 +150,6 @@ class MoodAvatar : AppCompatActivity() {
         //init buttons
         selectedMood  = AvatarFactory.getMoodInt(mooder.mood.mood)
         setButtonSelected(buttonViews, selectedMood)
-        setCloudButton(true)
 
         //set button listeners
         for (i in buttonViews.indices) buttonViews[i].setOnClickListener {
@@ -164,57 +160,21 @@ class MoodAvatar : AppCompatActivity() {
         //render avatar
         renderMoodAvatar(avatarViews, selectedMood)
 
-
-
-/*
-        avatarViews[HEAD].setOnTouchListener(
+        (avatarViews[HEAD] as View).setOnTouchListener(  //avatarViews[] cast as View as View will override performClick (otherwise warning)
                 object : OnSwipeTouchListener(this) {
                     override fun onSwipeRight() {
-                        if (!coloringMode) {
-                            when(selectedPart) {
-                                HEAD -> avatar.headId = AvatarFactory.getNextPart(avatar.headId, selectedPart)
-                                HAIRTOP -> avatar.hairTopId = AvatarFactory.getNextPart(avatar.hairTopId, selectedPart)
-                                HAIRBACK -> avatar.hairBackId = AvatarFactory.getNextPart(avatar.hairBackId, selectedPart)
-                                EYES -> avatar.eyesId = AvatarFactory.getNextPart(avatar.eyesId, selectedPart)
-                                NOSE -> avatar.noseId = AvatarFactory.getNextPart(avatar.noseId, selectedPart)
-                                MOUTH -> avatar.mouthId = AvatarFactory.getNextPart(avatar.mouthId, selectedPart)
-                                EYEBROWS -> avatar.eyebrowsId = AvatarFactory.getNextPart(avatar.eyebrowsId, selectedPart)
-                            }
-                            renderPart(avatarViews[selectedPart], selectedPart)
-                        } else {
-                            when(selectedPart) {
-                                HEAD -> avatar.skinColor = AvatarFactory.getNextPartColor(avatar.skinColor, selectedPart)
-                                HAIRTOP -> avatar.hairColor = AvatarFactory.getNextPartColor(avatar.hairColor, selectedPart)
-                                HAIRBACK -> avatar.hairColor = AvatarFactory.getNextPartColor(avatar.hairColor, selectedPart)
-                                EYEBROWS -> avatar.eyebrowsColor = AvatarFactory.getNextPartColor(avatar.eyebrowsColor, selectedPart)
-                            }
-                            renderPartColor(avatarViews, selectedPart)
-                        }
+                        if (selectedMood < buttonViews.size-1) selectedMood++ else selectedMood=0
+                        setButtonSelected(buttonViews, selectedMood)
+                        renderMoodAvatar(avatarViews, selectedMood)
                     }
                     override fun onSwipeLeft() {
-                        if (!coloringMode) {
-                            when (selectedPart) {
-                                HEAD -> avatar.headId = AvatarFactory.getPrevPart(avatar.headId, selectedPart)
-                                HAIRTOP -> avatar.hairTopId = AvatarFactory.getPrevPart(avatar.hairTopId, selectedPart)
-                                HAIRBACK -> avatar.hairBackId = AvatarFactory.getPrevPart(avatar.hairBackId, selectedPart)
-                                EYES -> avatar.eyesId = AvatarFactory.getPrevPart(avatar.eyesId, selectedPart)
-                                NOSE -> avatar.noseId = AvatarFactory.getPrevPart(avatar.noseId, selectedPart)
-                                MOUTH -> avatar.mouthId = AvatarFactory.getPrevPart(avatar.mouthId, selectedPart)
-                                EYEBROWS -> avatar.eyebrowsId = AvatarFactory.getPrevPart(avatar.eyebrowsId, selectedPart)
-                            }
-                            renderPart(avatarViews[selectedPart], selectedPart)
-                        } else {
-                            when(selectedPart) {
-                                HEAD -> avatar.skinColor = AvatarFactory.getPrevPartColor(avatar.skinColor, selectedPart)
-                                HAIRTOP -> avatar.hairColor = AvatarFactory.getPrevPartColor(avatar.hairColor, selectedPart)
-                                HAIRBACK -> avatar.hairColor = AvatarFactory.getPrevPartColor(avatar.hairColor, selectedPart)
-                                EYEBROWS -> avatar.eyebrowsColor = AvatarFactory.getPrevPartColor(avatar.eyebrowsColor, selectedPart)
-                            }
-                            renderPartColor(avatarViews, selectedPart)
-                        }
+                        if (selectedMood > 1 ) selectedMood-- else selectedMood=buttonViews.size-1
+                        setButtonSelected(buttonViews, selectedMood)
+                        renderMoodAvatar(avatarViews, selectedMood)
+
                     }
                 }
-        ) */
+        )
     }
 
     private fun renderMoodAvatar(avatarViews: Array<AppCompatImageView>, mood: Int) {
@@ -247,7 +207,7 @@ class MoodAvatar : AppCompatActivity() {
         if (!buttonViews[selectedButton].isSelected) {
             selectedMood = selectedButton
             for (i in buttonViews.indices) buttonViews[i].isSelected = (i == selectedButton) //highlights the selected button
-            setCloudButton(false)
+            setSharedButton(false)
         }
     }
 
@@ -258,24 +218,17 @@ class MoodAvatar : AppCompatActivity() {
 
         Log.w("MoodAvatar", "saving with mooder " + mooderId + " " + mooder.mood.toString())
         if (MoodiiApi.updateMood(mooderId, mooder.mood)) {
-            Toast.makeText(applicationContext, "Mood saved", Toast.LENGTH_SHORT).show()
-            setCloudButton(true)
+            Toast.makeText(applicationContext, "Moodii shared", Toast.LENGTH_SHORT).show()
+            setSharedButton(true)
         } else {
             Toast.makeText(applicationContext, "Failed to save (Internet connection?)", Toast.LENGTH_SHORT).show()
         }
     }
 
-    private fun setCloudButton(stored: Boolean) {
-        val cloudButton = findViewById<FloatingActionButton>(R.id.cloudButton)
-        if (stored) {
-            cloudButton.setImageResource(R.drawable.ic_cloud_done)
-            cloudButton.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.colorFloatingButtonSaved))
-        } else {
-            //reset floating saved button
-            cloudButton.setImageResource(R.drawable.ic_cloud_upload)
-            cloudButton.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.colorFloatingButton))
-        }
-
+    private fun setSharedButton(stored: Boolean) {
+        val shareButton = findViewById<FloatingActionButton>(R.id.shareButton)
+        if (stored)  shareButton.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.colorFloatingButtonSaved))
+        else shareButton.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.colorFloatingButton))
     }
 
     fun viewToBitmap(view: View): Bitmap {  //careful where this is called, views must have been created width/height will be zero

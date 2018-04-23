@@ -24,17 +24,45 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <ImageView
+            android:id="@+id/imageSwipeRight"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
+            android:tint="@color/colorSwipeIcon"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_chevron_righ"
+            tools:alpha="10" />
+
+        <ImageView
+            android:id="@+id/imageSwipeLeft"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:tint="@color/colorSwipeIcon"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_chevron_left" />
+
         <android.support.design.widget.FloatingActionButton
-            android:id="@+id/cloudButton"
+            android:id="@+id/shareButton"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_marginEnd="16dp"
             android:layout_marginTop="16dp"
             android:clickable="true"
+            android:tint="@android:color/white"
             app:backgroundTint="@color/colorFloatingButtonSaved"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_cloud_done" />
+            app:srcCompat="@drawable/ic_share" />
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/avatarLayout"
