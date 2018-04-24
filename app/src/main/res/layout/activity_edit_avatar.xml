@@ -124,45 +124,28 @@
             app:srcCompat="@drawable/hair_top_1" />
 
 
-        <EditText
-            android:id="@+id/textNameTag"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginTop="8dp"
-            android:drawablePadding="10dp"
-            android:drawableStart="@drawable/icon_name_tag"
-            android:drawableTint="@color/colorPrimary"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:maxLength="@integer/config_nameTagLength"
-            android:saveEnabled="false"
-            android:selectAllOnFocus="true"
-            app:layout_constraintEnd_toEndOf="@+id/hairTop"
-            app:layout_constraintStart_toStartOf="@+id/hairTop"
-            app:layout_constraintTop_toTopOf="@+id/hairTop" />
-
-        <ImageButton
-            android:id="@+id/iconColorToggle"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_marginBottom="16dp"
-            android:backgroundTint="@android:color/transparent"
-            android:onClick="toggleColoringMode"
-            app:layout_constraintBottom_toBottomOf="@+id/hairTop"
-            app:layout_constraintEnd_toEndOf="@+id/hairTop"
-            app:srcCompat="@drawable/icon_color_selector" />
-
         <ImageButton
             android:id="@+id/iconFaceToggle"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_marginBottom="16dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
             android:backgroundTint="@android:color/transparent"
             android:onClick="toggleColoringMode"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/iconColorToggle"
+            app:layout_constraintEnd_toEndOf="parent"
             app:srcCompat="@drawable/icon_face_selector" />
+
+        <ImageButton
+            android:id="@+id/iconColorToggle"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginBottom="8dp"
+            android:backgroundTint="@android:color/transparent"
+            android:onClick="toggleColoringMode"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/iconFaceToggle"
+            app:srcCompat="@drawable/icon_color_selector" />
 
     </android.support.constraint.ConstraintLayout>
 

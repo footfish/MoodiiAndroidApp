@@ -25,7 +25,7 @@
             </group>
             <path
                 android:pathData="M92.824506 220.49584c0 0 -9.00397 5.58757 -18.28945 5.58757 -9.285476 0 -18.289445 -5.58757 -18.289445 -5.58757 0 0 13.366617 -5.09159 18.289445 -1.87683 5.471081 -3.06167 18.28945 1.87683 18.28945 1.87683z"
-                android:fillColor="#2c5aa0"
+                android:fillColor="#0077FF"
                 android:strokeMiterLimit="4"
                 android:fillAlpha="0.9921569" />
         </group>

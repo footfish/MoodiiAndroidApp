@@ -27,9 +27,10 @@ import com.google.android.gms.location.LocationServices
 import com.moodii.app.MoodiiApp
 import com.moodii.app.R
 import com.moodii.app.api.MoodiiApi
+import java.util.*
 
 
-private var mooder = Mooder("", "","", Avatar(), Mood())
+private var mooder = Mooder("", "",Avatar(), Mood())
 private var mooderId = "0"
 
 private var selectedPart  = HEAD
@@ -37,7 +38,6 @@ private var coloringMode  = false
 
 class EditAvatar : AppCompatActivity() {
     lateinit var app: MoodiiApp
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     //Add the action buttons to Navbar
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -50,34 +50,11 @@ class EditAvatar : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         R.id.action_save -> {
             if (MoodiiApi.updateAvatar(mooderId, mooder.avatar)) {
-
-                //location
-                if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION )
-                        != PackageManager.PERMISSION_GRANTED) {
-                    // Permission is not granted
-
-                    //request permission
-                    ActivityCompat.requestPermissions(this,
-                            arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION),
-                            4501)
-//                            MY_PERMISSION_ACCESS_COURSE_LOCATION)
-
-                }
-
-                fusedLocationClient.lastLocation
-                        .addOnSuccessListener { location : Location? ->
-                            Log.w("EditAvatar", "locaton" + location.toString())
-                            // Got last known location. In some rare situations this can be null.
-                        }
-
-
                 val intent = Intent(this, MoodAvatar::class.java)
                 intent.putExtra("mooderId", mooderId)
                 startActivity(intent)
                 overridePendingTransition(0, 0) //stop flicker on activity change
                 finish() //forget back button
-                var nameTagView = findViewById<EditText>(R.id.textNameTag)
-                mooder.nameTag = nameTagView.text.toString()
             } else {
                 Toast.makeText(applicationContext, "Failed to save (Internet connection active?)", Toast.LENGTH_SHORT).show()
             }
@@ -102,12 +79,10 @@ class EditAvatar : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_avatar)
 
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-
         //add Nav bar
         setSupportActionBar(findViewById(R.id.my_toolbar))
-        supportActionBar?.title = ""
-            if (mooder.nameTag == "") supportActionBar?.setLogo(R.drawable.moodii_logo_sad) else supportActionBar?.setLogo(R.drawable.moodii_logo_happy)
+        supportActionBar?.title = " Edit " +  getString(R.string.app_name)
+        if (Random().nextBoolean()) supportActionBar?.setLogo(R.drawable.moodii_logo_sad) else supportActionBar?.setLogo(R.drawable.moodii_logo_happy)
 
         //set mooderId if passed
         if(this.intent.hasExtra("mooderId")) mooderId =this.intent.extras.getString("mooderId")
@@ -162,9 +137,6 @@ class EditAvatar : AppCompatActivity() {
         renderPartColor(avatarViews, HEAD)
         renderPartColor(avatarViews, HAIRTOP)
         renderPartColor(avatarViews, EYEBROWS)
-        //render name tag
-        var nameTagView = findViewById<EditText>(R.id.textNameTag)
-        nameTagView.setText(mooder.nameTag)
 
 
         (avatarViews[HEAD] as View).setOnTouchListener(  //avatarViews[] cast as View as View will override performClick (otherwise warning)

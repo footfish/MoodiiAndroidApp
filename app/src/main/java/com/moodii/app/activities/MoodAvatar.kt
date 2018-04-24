@@ -1,7 +1,9 @@
 package com.moodii.app.activities
 
-import android.content.Context
+import android.Manifest
+import android.content.DialogInterface
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.PorterDuff
@@ -23,21 +25,28 @@ import java.text.SimpleDateFormat
 import java.util.*
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.location.Location
 import android.support.constraint.ConstraintLayout
+import android.support.v4.app.ActivityCompat
 import android.support.v4.content.FileProvider
+import android.support.v7.app.AlertDialog
 import android.view.View
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.moodii.app.BuildConfig
 import com.moodii.app.helpers.OnSwipeTouchListener
 import java.io.File
 import java.io.FileOutputStream
 
 
-private var mooder = Mooder("","","", Avatar(), Mood())
+private var mooder = Mooder("","",Avatar(), Mood())
 private var selectedMood  = NEUTRAL
 private var mooderId = "0"
 private const val MOODIIURL = "http://www.moodii.com/"
+private const val REQUEST_CODE_ACCESS_COURSE_LOCATION = 5401
 
 class MoodAvatar : AppCompatActivity() {
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     //Add the action buttons to Navbar
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -65,7 +74,7 @@ class MoodAvatar : AppCompatActivity() {
             true
         }
         R.id.action_shareMoodCloud -> {
-            saveMood()
+            shareMood()
             true
         }
         R.id.action_shareMoodLink -> {
@@ -97,27 +106,28 @@ class MoodAvatar : AppCompatActivity() {
             true
         }
 
-
         else -> { //action not recognised.
             super.onOptionsItemSelected(item)
         }
     }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_mood_avatar)
+
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
         //add navbar
         setSupportActionBar(findViewById(R.id.my_toolbar))
-        supportActionBar?.title = " " + mooder.nameTag
-        if (mooder.nameTag == "") supportActionBar?.setLogo(R.drawable.moodii_logo_sad) else supportActionBar?.setLogo(R.drawable.moodii_logo_happy)
+        supportActionBar?.title = " My " +  getString(R.string.app_name)
+        if (Random().nextBoolean()) supportActionBar?.setLogo(R.drawable.moodii_logo_sad) else supportActionBar?.setLogo(R.drawable.moodii_logo_happy)
 
         //set mooderId if passed (from SignIn)
         if(this.intent.hasExtra("mooderId")) mooderId =this.intent.extras.getString("mooderId")
 
 
         //set listener for floating share button
-        findViewById<FloatingActionButton>(R.id.shareButton).setOnClickListener({saveMood()})
+        findViewById<FloatingActionButton>(R.id.shareButton).setOnClickListener({shareMood()})
 
         //init array of avatar parts
         val avatarViews = arrayOf<AppCompatImageView> (
@@ -177,65 +187,109 @@ class MoodAvatar : AppCompatActivity() {
         )
     }
 
-    private fun renderMoodAvatar(avatarViews: Array<AppCompatImageView>, mood: Int) {
-        for ( partType in avatarViews.indices) {
-            avatarViews[partType].setImageResource(resources.getIdentifier(AvatarFactory.getResPart(mooder.avatar, partType, mood), "drawable", packageName))
-            renderPartColor(avatarViews,partType)
-        }
-    }
+    override fun onStart() {
+        super.onStart()
 
-    private fun renderPartColor(v: Array<AppCompatImageView>, partType: Int) {
-        when(partType) {
-            HEAD -> {
-                v[HEAD].setColorFilter(Color.parseColor(mooder.avatar.skinColor), PorterDuff.Mode.SRC_ATOP)
+        // Check permission for location and request it if not already obtained (better for user flow to do this here instead of during share)
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+            != PackageManager.PERMISSION_GRANTED) {
+            // Permission is not granted, check if we need explanation
+             if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_COARSE_LOCATION)) { //if app requested this permission before and user turned down
+                    AlertDialog.Builder(this)
+                     .setCancelable(false)
+                     .setTitle(getString(R.string.dialog_location_permission_title))
+                     .setMessage(getString(R.string.dialog_location_permission_text))
+                     .setPositiveButton(getString(R.string.dialog_location_permission_button_settings)) { _ , _ ->
+                        ActivityCompat.requestPermissions(this,
+                                arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION),
+                                REQUEST_CODE_ACCESS_COURSE_LOCATION)
+                     }
+                     .setNegativeButton(getString(R.string.dialog_location_permission_button_dismiss)) { _ , _ -> }
+                     .create()
+                     .show()
+            } else { //if first time app is run OR 'never ask again' clicked
+            ActivityCompat.requestPermissions(this,
+            arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION),
+            REQUEST_CODE_ACCESS_COURSE_LOCATION)
             }
-            HAIRTOP -> {
-                v[HAIRBACK].setColorFilter(Color.parseColor(mooder.avatar.hairColor), PorterDuff.Mode.SRC_ATOP)
-                v[HAIRTOP].setColorFilter(Color.parseColor(mooder.avatar.hairColor), PorterDuff.Mode.SRC_ATOP)
-            }
-            HAIRBACK-> {
-                v[HAIRBACK].setColorFilter(Color.parseColor(mooder.avatar.hairColor), PorterDuff.Mode.SRC_ATOP)
-                v[HAIRTOP].setColorFilter(Color.parseColor(mooder.avatar.hairColor), PorterDuff.Mode.SRC_ATOP)
-            }
-            EYEBROWS -> {
-                v[EYEBROWS].setColorFilter(Color.parseColor(mooder.avatar.eyebrowsColor), PorterDuff.Mode.SRC_ATOP)
-            }
         }
-    }
+}
 
-    private fun setButtonSelected(buttonViews: Array<AppCompatImageButton>, selectedButton: Int) {
-        if (!buttonViews[selectedButton].isSelected) {
-            selectedMood = selectedButton
-            for (i in buttonViews.indices) buttonViews[i].isSelected = (i == selectedButton) //highlights the selected button
-            setSharedButton(false)
+private fun renderMoodAvatar(avatarViews: Array<AppCompatImageView>, mood: Int) {
+for ( partType in avatarViews.indices) {
+avatarViews[partType].setImageResource(resources.getIdentifier(AvatarFactory.getResPart(mooder.avatar, partType, mood), "drawable", packageName))
+renderPartColor(avatarViews,partType)
+}
+}
+
+private fun renderPartColor(v: Array<AppCompatImageView>, partType: Int) {
+when(partType) {
+HEAD -> {
+v[HEAD].setColorFilter(Color.parseColor(mooder.avatar.skinColor), PorterDuff.Mode.SRC_ATOP)
+}
+HAIRTOP -> {
+v[HAIRBACK].setColorFilter(Color.parseColor(mooder.avatar.hairColor), PorterDuff.Mode.SRC_ATOP)
+v[HAIRTOP].setColorFilter(Color.parseColor(mooder.avatar.hairColor), PorterDuff.Mode.SRC_ATOP)
+}
+HAIRBACK-> {
+v[HAIRBACK].setColorFilter(Color.parseColor(mooder.avatar.hairColor), PorterDuff.Mode.SRC_ATOP)
+v[HAIRTOP].setColorFilter(Color.parseColor(mooder.avatar.hairColor), PorterDuff.Mode.SRC_ATOP)
+}
+EYEBROWS -> {
+v[EYEBROWS].setColorFilter(Color.parseColor(mooder.avatar.eyebrowsColor), PorterDuff.Mode.SRC_ATOP)
+}
+}
+}
+
+private fun setButtonSelected(buttonViews: Array<AppCompatImageButton>, selectedButton: Int) {
+if (!buttonViews[selectedButton].isSelected) {
+selectedMood = selectedButton
+for (i in buttonViews.indices) buttonViews[i].isSelected = (i == selectedButton) //highlights the selected button
+setSharedButton(false)
+}
+}
+
+private fun shareMood(){
+mooder.mood.mood=AvatarFactory.getMoodString(selectedMood)
+mooder.mood.timestamp = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss:SSSZ", Locale.UK).format(Date())
+
+//location
+Log.w("MoodAvatar", "Now get location" )
+if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION ) == PackageManager.PERMISSION_GRANTED) { //If we have permission for access to location
+        fusedLocationClient.lastLocation.addOnSuccessListener { location ->   //callback with location
+            Log.w("MoodAvatar", "locaton" + location.toString())
+            if (location != null){
+                mooder.mood.latitude = location.latitude
+                mooder.mood.longitude = location.longitude
+            }
+            saveMood()
         }
+} else { //share with no location
+    saveMood()
+}
+}
+
+private fun saveMood(){
+    Log.w("MoodAvatar", "saving with mooder " + mooderId + " " + mooder.mood.toString())
+    if (MoodiiApi.updateMood(mooderId, mooder.mood)) {
+        Toast.makeText(applicationContext, "Moodii shared", Toast.LENGTH_SHORT).show()
+        setSharedButton(true)
+    } else {
+        Toast.makeText(applicationContext, "Failed to save (Internet connection?)", Toast.LENGTH_SHORT).show()
     }
+}
 
-    private fun saveMood(){
-        mooder.mood.mood=AvatarFactory.getMoodString(selectedMood)
-        mooder.mood.timestamp = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss:SSSZ", Locale.UK).format(Date())
+private fun setSharedButton(stored: Boolean) {
+val shareButton = findViewById<FloatingActionButton>(R.id.shareButton)
+if (stored)  shareButton.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.colorFloatingButtonSaved))
+else shareButton.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.colorFloatingButton))
+}
 
-
-        Log.w("MoodAvatar", "saving with mooder " + mooderId + " " + mooder.mood.toString())
-        if (MoodiiApi.updateMood(mooderId, mooder.mood)) {
-            Toast.makeText(applicationContext, "Moodii shared", Toast.LENGTH_SHORT).show()
-            setSharedButton(true)
-        } else {
-            Toast.makeText(applicationContext, "Failed to save (Internet connection?)", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    private fun setSharedButton(stored: Boolean) {
-        val shareButton = findViewById<FloatingActionButton>(R.id.shareButton)
-        if (stored)  shareButton.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.colorFloatingButtonSaved))
-        else shareButton.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.colorFloatingButton))
-    }
-
-    fun viewToBitmap(view: View): Bitmap {  //careful where this is called, views must have been created width/height will be zero
-        val bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(bitmap)
-        view.draw(canvas)
-        return bitmap
-    }
+fun viewToBitmap(view: View): Bitmap {  //careful where this is called, views must have been created width/height will be zero
+val bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
+val canvas = Canvas(bitmap)
+view.draw(canvas)
+return bitmap
+}
 
 }

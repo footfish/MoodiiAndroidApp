@@ -30,7 +30,7 @@
                 android:translateY="25.66801">
                 <path
                     android:pathData="M226.97956 231.63613c0 9.5596 -4.26227 11.48836 -9.52005 11.48836 -5.25778 0 -9.52005 -1.92876 -9.52005 -11.48836 0 -9.5596 9.52005 -26.30502 9.52005 -26.30502 0 0 9.52005 16.74542 9.52005 26.30502z"
-                    android:fillColor="#2c5aa0"
+                    android:fillColor="#0077FF"
                     android:strokeMiterLimit="4" />
             </group>
         </group>
