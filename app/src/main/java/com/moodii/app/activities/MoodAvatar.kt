@@ -25,12 +25,17 @@ import java.text.SimpleDateFormat
 import java.util.*
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.drawable.Animatable
 import android.location.Location
 import android.support.constraint.ConstraintLayout
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.FileProvider
 import android.support.v7.app.AlertDialog
 import android.view.View
+import android.view.animation.Animation
+import android.view.animation.LinearInterpolator
+import android.view.animation.RotateAnimation
+import android.widget.ImageView
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.moodii.app.BuildConfig
@@ -187,6 +192,7 @@ class MoodAvatar : AppCompatActivity() {
         )
     }
 
+
     override fun onStart() {
         super.onStart()
 
@@ -213,7 +219,13 @@ class MoodAvatar : AppCompatActivity() {
             REQUEST_CODE_ACCESS_COURSE_LOCATION)
             }
         }
-}
+        //show animate swipe icon
+        val swipeSplash = findViewById<ImageView>(R.id.iconSwipe)
+        val swipeDraw = swipeSplash.drawable
+        if (swipeDraw is Animatable) {
+            swipeDraw.start()
+        }
+    }
 
 private fun renderMoodAvatar(avatarViews: Array<AppCompatImageView>, mood: Int) {
 for ( partType in avatarViews.indices) {

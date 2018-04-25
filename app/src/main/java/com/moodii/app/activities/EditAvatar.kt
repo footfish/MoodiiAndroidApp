@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.PorterDuff
+import android.graphics.drawable.Animatable
 import android.location.Location
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -189,6 +190,16 @@ class EditAvatar : AppCompatActivity() {
         )
     }
 
+    override fun onStart() {
+        super.onStart()
+        //show animate swipe icon
+        val swipeSplash = findViewById<ImageView>(R.id.iconSwipe)
+        val swipeDraw = swipeSplash.drawable
+        if (swipeDraw is Animatable) {
+            swipeDraw.start()
+        }
+
+    }
     //renders the avatars stored part of type 'partType' to the passed ImageView v.
     private fun renderPart(v: ImageView, partType: Int) {
             v.setImageResource(resources.getIdentifier(AvatarFactory.getResPart(mooder.avatar, partType), "drawable", packageName))

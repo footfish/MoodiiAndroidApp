@@ -1,12 +1,12 @@
 package com.moodii.app.api
 
 import android.util.Log
+import android.view.View
 import com.google.gson.GsonBuilder
 import com.moodii.app.models.Avatar
 import com.moodii.app.models.Mood
 import com.moodii.app.models.Mooder
-import kotlinx.coroutines.experimental.async
-import kotlinx.coroutines.experimental.runBlocking
+import kotlinx.coroutines.experimental.*
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -49,7 +49,10 @@ object MoodiiApi {
     // http resultCode 201 for new instance
     fun getId(token: String): IdResult {
         val call = moodiiClient.getId(token)
-        val result = async { try {call.execute()} catch (e:Exception) {return@async null} } //use co-routines to act like synchronous call
+        val result = async {
+            try {call.execute()}
+            catch (e:Exception) {return@async null}
+        } //co-routines to act like synchronous call
         val response = runBlocking { result.await() } //use Mooder model to get 'id'
         val idResult = IdResult(response?.code(),response?.body()?.id)
         if ((idResult.resultCode == 200 || idResult.resultCode == 201 ) && idResult.uid == null) idResult.resultCode = 500 //should always have uid if response is success 
@@ -58,7 +61,10 @@ object MoodiiApi {
 
     fun getMooder(uid: String): Mooder? {
         val call = moodiiClient.getMooder(uid)
-        val result = async { try {call.execute()} catch (e:Exception) {return@async null} } //use co-routines to act like synchronous call
+        val result = async {
+            try {call.execute()}
+            catch (e:Exception) {return@async null}
+        } //co-routines to act like synchronous call
         val mooder = runBlocking { result.await()?.body() } //return Mooder
         //nts: if we can't get mooder from REST perhaps should load last from local storage. Should inform the user network was unavailable (could overwrite newer!)
         return mooder
@@ -66,7 +72,10 @@ object MoodiiApi {
 
     fun getAvatar(uid: String): Avatar? {
         val call = moodiiClient.getAvatar(uid)
-        val result = async { try {call.execute()} catch (e:Exception) {return@async null} } //use co-routines to act like synchronous call
+        val result = async {
+            try {call.execute()}
+            catch (e:Exception) {return@async null}
+        } //co-routines to act like synchronous call
         val avatar = runBlocking { result.await()?.body() } //return Mooder
         //nts: if we can't get avatar from REST perhaps should load last from local storage. Should inform the user network was unavailable (could overwrite newer!)
         return avatar
@@ -74,8 +83,13 @@ object MoodiiApi {
 
     fun updateMood(uid: String, mood: Mood): Boolean {
         val call = moodiiClient.updateMood(uid, mood)
-        val result = async { try {call.execute()} catch (e:Exception) {return@async null} } //use co-routines to act like synchronous call
-        val resultCode = runBlocking { result.await()?.code() }
+        val result = async {
+            try {call.execute()}
+            catch (e:Exception) {return@async null}
+        }//co-routines to act like synchronous call
+        val resultCode = runBlocking() {
+            result.await()?.code()
+        }
         return (resultCode==200)
     }
 
@@ -85,9 +99,6 @@ object MoodiiApi {
         val resultCode = runBlocking { result.await()?.code() }
         return (resultCode==200)
     }
-
-
-    //Get mood
 
 
 }
