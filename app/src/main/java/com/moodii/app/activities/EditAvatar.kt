@@ -24,7 +24,7 @@ import java.util.*
 
 
 private var mooder = Mooder("", "",Avatar(), Mood())
-private var avatarFirstload = true //records if activity is first time loading, used for rotate
+private var reloadMooder = true //if true will load from API, esp. used on rotate
 private var mooderId = "unknown"
 private var selectedPart  = HEAD
 private var coloringMode  = false
@@ -47,6 +47,7 @@ class EditAvatar : AppCompatActivity() {
                 if (it) {
                     val intent = Intent(this, MoodAvatar::class.java)
                     intent.putExtra("mooderId", mooderId)
+                    intent.putExtra("reloadMooder", true)
                     startActivity(intent)
                     overridePendingTransition(0, 0) //stop flicker on activity change
                     finish() //forget back button
@@ -79,8 +80,12 @@ class EditAvatar : AppCompatActivity() {
         supportActionBar?.title = " Edit " +  getString(R.string.app_name)
         if (Random().nextBoolean()) supportActionBar?.setLogo(R.drawable.moodii_logo_sad) else supportActionBar?.setLogo(R.drawable.moodii_logo_happy)
 
-        //set mooderId if passed
+        //Check passed intents
         if(this.intent.hasExtra("mooderId")) mooderId =this.intent.extras.getString("mooderId")
+        if(this.intent.hasExtra("reloadMooder")) {  //force reload from API after Edit
+            reloadMooder = this.intent.extras.getBoolean("reloadMooder")
+            this.intent.removeExtra("reloadMooder")
+        }
 
         //init array of avatar parts
         val avatarViews = arrayOf<AppCompatImageView> (
@@ -105,11 +110,11 @@ class EditAvatar : AppCompatActivity() {
                 )
 
         //load mooder we'll use
-        if (avatarFirstload) {
+        if (reloadMooder) {
             val tAvatar = MoodiiApi.getAvatar(mooderId)
             if (tAvatar != null) {
                 mooder.avatar = tAvatar
-                avatarFirstload = false
+                reloadMooder = false
             } else { //can't load return to MoodAvatar
                 val intent = Intent(this, MoodAvatar::class.java)
                 startActivity(intent)

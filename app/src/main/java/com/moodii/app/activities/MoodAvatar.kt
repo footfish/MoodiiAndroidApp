@@ -39,7 +39,8 @@ import java.io.FileOutputStream
 
 
 private var mooder = Mooder("","",Avatar(), Mood())
-private var selectedMood  = -1
+private var selectedMood  = -1 //-1 = unset, forces load from api
+private var reloadMooder = true //  //if true will load from API, esp. used on rotate
 private var mooderId = "0"
 private const val MOODIIURL = "http://www.moodii.com/"
 private const val REQUEST_CODE_ACCESS_COURSE_LOCATION = 5401
@@ -121,11 +122,14 @@ class MoodAvatar : AppCompatActivity() {
         supportActionBar?.title = " My " +  getString(R.string.app_name)
         if (Random().nextBoolean()) supportActionBar?.setLogo(R.drawable.moodii_logo_sad) else supportActionBar?.setLogo(R.drawable.moodii_logo_happy)
 
-        //set mooderId if passed (from SignIn)
-        if(this.intent.hasExtra("mooderId")) mooderId =this.intent.extras.getString("mooderId")
+        //check intents
+        if(this.intent.hasExtra("mooderId")) mooderId =this.intent.extras.getString("mooderId") //from SignIn
+        if(this.intent.hasExtra("reloadMooder")) { //force reload from API after Edit
+            reloadMooder = this.intent.extras.getBoolean("reloadMooder")
+            this.intent.removeExtra("reloadMooder")
+        }
 
-
-        //set listener for floating share button
+                //set listener for floating share button
         findViewById<FloatingActionButton>(R.id.shareButton).setOnClickListener({shareMood()})
 
         //init array of avatar parts
@@ -148,8 +152,13 @@ class MoodAvatar : AppCompatActivity() {
                 findViewById(R.id.buttonSurprised)
                 )
 
-         val tMooder = MoodiiApi.getMooder(mooderId)
-         if (tMooder != null) mooder = tMooder
+
+        //load mood
+        if (reloadMooder) {
+            val tMooder = MoodiiApi.getMooder(mooderId)
+            if (tMooder != null) mooder = tMooder
+            reloadMooder = false
+        }
 
         //nts: implement failed load
         Log.w("MoodAvatar", "starting with mooder " + mooder.toString())
