@@ -15,17 +15,6 @@
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
-    <ImageView
-        android:id="@+id/iconSwipe"
-        android:layout_width="85dp"
-        android:layout_height="85dp"
-        android:layout_marginBottom="16dp"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/swipe_animation" />
-
     <android.support.constraint.ConstraintLayout
         android:id="@+id/avatarLayout"
         android:layout_width="match_parent"
@@ -135,6 +124,17 @@
             app:srcCompat="@drawable/icon_color_selector" />
 
     </android.support.constraint.ConstraintLayout>
+
+    <ImageView
+        android:id="@+id/iconSwipe"
+        android:layout_width="85dp"
+        android:layout_height="85dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/swipe_animation" />
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/constraintLayout"

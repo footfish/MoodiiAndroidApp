@@ -39,7 +39,7 @@ import java.io.FileOutputStream
 
 
 private var mooder = Mooder("","",Avatar(), Mood())
-private var selectedMood  = NEUTRAL
+private var selectedMood  = -1
 private var mooderId = "0"
 private const val MOODIIURL = "http://www.moodii.com/"
 private const val REQUEST_CODE_ACCESS_COURSE_LOCATION = 5401
@@ -148,16 +148,14 @@ class MoodAvatar : AppCompatActivity() {
                 findViewById(R.id.buttonSurprised)
                 )
 
-        //load mooder we'll use
-        val tMooder = MoodiiApi.getMooder(mooderId)
-        if (tMooder != null) {
-            mooder = tMooder
-        }
+         val tMooder = MoodiiApi.getMooder(mooderId)
+         if (tMooder != null) mooder = tMooder
+
         //nts: implement failed load
         Log.w("MoodAvatar", "starting with mooder " + mooder.toString())
 
         //init buttons
-        selectedMood  = AvatarFactory.getMoodInt(mooder.mood.mood)
+        if (selectedMood == -1) selectedMood  = AvatarFactory.getMoodInt(mooder.mood.mood)
         setButtonSelected(buttonViews, selectedMood)
 
         //set button listeners

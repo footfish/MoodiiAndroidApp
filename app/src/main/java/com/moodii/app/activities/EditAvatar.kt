@@ -24,8 +24,8 @@ import java.util.*
 
 
 private var mooder = Mooder("", "",Avatar(), Mood())
-private var mooderId = "0"
-
+private var avatarFirstload = true //records if activity is first time loading, used for rotate
+private var mooderId = "unknown"
 private var selectedPart  = HEAD
 private var coloringMode  = false
 
@@ -105,16 +105,20 @@ class EditAvatar : AppCompatActivity() {
                 )
 
         //load mooder we'll use
-        val tAvatar = MoodiiApi.getAvatar(mooderId)
-        if (tAvatar != null) {
-            mooder.avatar = tAvatar
-        } else { //can't load return to MoodAvatar
-            val intent = Intent(this, MoodAvatar::class.java)
-            startActivity(intent)
-            overridePendingTransition(0, 0) //stop flicker on activity change
-            finish() //forget back button
-            Toast.makeText(applicationContext, "Can't edit (Internet connection active?)", Toast.LENGTH_SHORT).show()
+        if (avatarFirstload) {
+            val tAvatar = MoodiiApi.getAvatar(mooderId)
+            if (tAvatar != null) {
+                mooder.avatar = tAvatar
+                avatarFirstload = false
+            } else { //can't load return to MoodAvatar
+                val intent = Intent(this, MoodAvatar::class.java)
+                startActivity(intent)
+                overridePendingTransition(0, 0) //stop flicker on activity change
+                finish() //forget back button
+                Toast.makeText(applicationContext, "Can't edit (Internet connection active?)", Toast.LENGTH_SHORT).show()
+            }
         }
+
 
         //nts: implement failed load
         Log.w("EditAvatar", "starting with mooder " + mooder.toString())
@@ -186,12 +190,12 @@ class EditAvatar : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        //show animate swipe icon
-        val swipeSplash = findViewById<ImageView>(R.id.iconSwipe)
-        val swipeDraw = swipeSplash.drawable
-        if (swipeDraw is Animatable) {
-            swipeDraw.start()
-        }
+            //show animate swipe icon
+            val swipeSplash = findViewById<ImageView>(R.id.iconSwipe)
+            val swipeDraw = swipeSplash.drawable
+            if (swipeDraw is Animatable) {
+                swipeDraw.start()
+            }
 
     }
     //renders the avatars stored part of type 'partType' to the passed ImageView v.
