@@ -1,33 +1,25 @@
 package com.moodii.app.activities
 
-import android.Manifest
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.drawable.Animatable
-import android.location.Location
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.support.v4.app.ActivityCompat
-import android.support.v4.content.ContextCompat
 import android.support.v7.widget.AppCompatImageButton
 import android.support.v7.widget.AppCompatImageView
 import android.util.Log
 import android.view.Menu
 import android.view.View
 import android.widget.ImageView
-import com.moodii.app.helpers.OnSwipeTouchListener
 import com.moodii.app.models.*
 import android.view.MenuItem
-import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.Toast
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
 import com.moodii.app.MoodiiApp
 import com.moodii.app.R
 import com.moodii.app.api.MoodiiApi
+import com.moodii.app.helpers.*
 import java.util.*
 
 
@@ -50,18 +42,20 @@ class EditAvatar : AppCompatActivity() {
     //Handle Navbar actions
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         R.id.action_save -> {
-            if (MoodiiApi.updateAvatar(mooderId, mooder.avatar)) {
-                val intent = Intent(this, MoodAvatar::class.java)
-                intent.putExtra("mooderId", mooderId)
-                startActivity(intent)
-                overridePendingTransition(0, 0) //stop flicker on activity change
-                finish() //forget back button
-            } else {
-                Toast.makeText(applicationContext, "Failed to save (Internet connection active?)", Toast.LENGTH_SHORT).show()
+            MoodiiApi.updateAvatar(mooderId, mooder.avatar)
+            {
+                if (it) {
+                    val intent = Intent(this, MoodAvatar::class.java)
+                    intent.putExtra("mooderId", mooderId)
+                    startActivity(intent)
+                    overridePendingTransition(0, 0) //stop flicker on activity change
+                    finish() //forget back button
+                } else {
+                    Toast.makeText(applicationContext, "Failed to save (Internet connection active?)", Toast.LENGTH_SHORT).show()
+                }
             }
             true
         }
-
         R.id.action_quit -> {
             val intent = Intent(this, MoodAvatar::class.java)
             intent.putExtra("mooderId", mooderId)
@@ -159,7 +153,7 @@ class EditAvatar : AppCompatActivity() {
                                 HEAD -> mooder.avatar.skinColor = AvatarFactory.getNextPartColor(mooder.avatar.skinColor, selectedPart)
                                 HAIRTOP -> mooder.avatar.hairColor = AvatarFactory.getNextPartColor(mooder.avatar.hairColor, selectedPart)
                                 HAIRBACK -> mooder.avatar.hairColor = AvatarFactory.getNextPartColor(mooder.avatar.hairColor, selectedPart)
-                                EYEBROWS-> mooder.avatar.eyebrowsColor = AvatarFactory.getNextPartColor(mooder.avatar.eyebrowsColor, selectedPart)
+                                EYEBROWS -> mooder.avatar.eyebrowsColor = AvatarFactory.getNextPartColor(mooder.avatar.eyebrowsColor, selectedPart)
                             }
                             renderPartColor(avatarViews, selectedPart)
                         }
@@ -181,7 +175,7 @@ class EditAvatar : AppCompatActivity() {
                                 HEAD -> mooder.avatar.skinColor = AvatarFactory.getPrevPartColor(mooder.avatar.skinColor, selectedPart)
                                 HAIRTOP -> mooder.avatar.hairColor = AvatarFactory.getPrevPartColor(mooder.avatar.hairColor, selectedPart)
                                 HAIRBACK -> mooder.avatar.hairColor = AvatarFactory.getPrevPartColor(mooder.avatar.hairColor, selectedPart)
-                                EYEBROWS-> mooder.avatar.eyebrowsColor = AvatarFactory.getPrevPartColor(mooder.avatar.eyebrowsColor, selectedPart)
+                                EYEBROWS -> mooder.avatar.eyebrowsColor = AvatarFactory.getPrevPartColor(mooder.avatar.eyebrowsColor, selectedPart)
                             }
                             renderPartColor(avatarViews, selectedPart)
                         }
@@ -214,7 +208,7 @@ class EditAvatar : AppCompatActivity() {
                 v[HAIRBACK].setColorFilter(Color.parseColor(mooder.avatar.hairColor), PorterDuff.Mode.SRC_ATOP)
                 v[HAIRTOP].setColorFilter(Color.parseColor(mooder.avatar.hairColor), PorterDuff.Mode.SRC_ATOP)
             }
-            HAIRBACK-> {
+            HAIRBACK -> {
                 v[HAIRBACK].setColorFilter(Color.parseColor(mooder.avatar.hairColor), PorterDuff.Mode.SRC_ATOP)
                 v[HAIRTOP].setColorFilter(Color.parseColor(mooder.avatar.hairColor), PorterDuff.Mode.SRC_ATOP)
             }
@@ -233,7 +227,7 @@ class EditAvatar : AppCompatActivity() {
         when(selectedButton){
             HEAD -> colorButton.visibility = View.VISIBLE
             HAIRTOP -> colorButton.visibility=View.VISIBLE
-            HAIRBACK-> colorButton.visibility=View.VISIBLE
+            HAIRBACK -> colorButton.visibility=View.VISIBLE
             EYEBROWS -> colorButton.visibility=View.VISIBLE
             MOUTH -> {
                 colorButton.visibility=View.GONE

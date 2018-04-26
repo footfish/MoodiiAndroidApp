@@ -1,7 +1,6 @@
 package com.moodii.app.activities
 
 import android.Manifest
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
@@ -20,26 +19,21 @@ import android.widget.Toast
 import com.moodii.app.R
 import com.moodii.app.api.MoodiiApi
 import com.moodii.app.models.*
-import com.moodii.app.models.AvatarFactory
 import java.text.SimpleDateFormat
 import java.util.*
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.drawable.Animatable
-import android.location.Location
 import android.support.constraint.ConstraintLayout
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.FileProvider
 import android.support.v7.app.AlertDialog
 import android.view.View
-import android.view.animation.Animation
-import android.view.animation.LinearInterpolator
-import android.view.animation.RotateAnimation
 import android.widget.ImageView
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.moodii.app.BuildConfig
-import com.moodii.app.helpers.OnSwipeTouchListener
+import com.moodii.app.helpers.*
 import java.io.File
 import java.io.FileOutputStream
 
@@ -243,7 +237,7 @@ HAIRTOP -> {
 v[HAIRBACK].setColorFilter(Color.parseColor(mooder.avatar.hairColor), PorterDuff.Mode.SRC_ATOP)
 v[HAIRTOP].setColorFilter(Color.parseColor(mooder.avatar.hairColor), PorterDuff.Mode.SRC_ATOP)
 }
-HAIRBACK-> {
+HAIRBACK -> {
 v[HAIRBACK].setColorFilter(Color.parseColor(mooder.avatar.hairColor), PorterDuff.Mode.SRC_ATOP)
 v[HAIRTOP].setColorFilter(Color.parseColor(mooder.avatar.hairColor), PorterDuff.Mode.SRC_ATOP)
 }
@@ -262,7 +256,7 @@ setSharedButton(false)
 }
 
 private fun shareMood(){
-mooder.mood.mood=AvatarFactory.getMoodString(selectedMood)
+mooder.mood.mood= AvatarFactory.getMoodString(selectedMood)
 mooder.mood.timestamp = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss:SSSZ", Locale.UK).format(Date())
 
 //location
@@ -283,11 +277,9 @@ if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LO
 
 private fun saveMood(){
     Log.w("MoodAvatar", "saving with mooder " + mooderId + " " + mooder.mood.toString())
-    if (MoodiiApi.updateMood(mooderId, mooder.mood)) {
-        Toast.makeText(applicationContext, "Moodii shared", Toast.LENGTH_SHORT).show()
-        setSharedButton(true)
-    } else {
-        Toast.makeText(applicationContext, "Failed to save (Internet connection?)", Toast.LENGTH_SHORT).show()
+    MoodiiApi.updateMood(mooderId, mooder.mood) {
+        if (it)  Toast.makeText(applicationContext, "Moodii shared", Toast.LENGTH_SHORT).show()
+        else     Toast.makeText(applicationContext, "Failed to save (Internet connection?)", Toast.LENGTH_SHORT).show()
     }
 }
 

@@ -1,4 +1,6 @@
-package com.moodii.app.models
+package com.moodii.app.helpers
+
+import com.moodii.app.models.Avatar
 
 const val HEAD = 0
 const val HAIRTOP = 1

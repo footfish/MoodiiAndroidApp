@@ -24,11 +24,11 @@
     <target android:name="position">
         <aapt:attr name="android:animation">
             <objectAnimator
-                android:duration="750"
+                android:duration="500"
                 android:propertyName="translateX"
                 android:valueFrom="0"
                 android:valueTo="4"
-                android:repeatCount="4"
+                android:repeatCount="2"
                 android:repeatMode="reverse"
                 />
          </aapt:attr>
@@ -36,7 +36,7 @@
     <target android:name="swipe">
         <aapt:attr name="android:animation">
             <objectAnimator
-                android:duration="1500"
+                android:duration="750"
                 android:propertyName="alpha"
                 android:valueFrom="0"
                 android:valueTo="1"
