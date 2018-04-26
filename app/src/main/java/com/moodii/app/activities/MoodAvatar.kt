@@ -1,6 +1,7 @@
 package com.moodii.app.activities
 
 import android.Manifest
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
@@ -28,6 +29,7 @@ import android.support.constraint.ConstraintLayout
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.FileProvider
 import android.support.v7.app.AlertDialog
+import android.telephony.TelephonyManager
 import android.view.View
 import android.widget.ImageView
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -60,6 +62,7 @@ class MoodAvatar : AppCompatActivity() {
         R.id.action_edit -> {
             val intent = Intent(this, EditAvatar::class.java)
             intent.putExtra("mooderId", mooderId)
+            intent.putExtra("reloadMooder", true)
             startActivity(intent)
             overridePendingTransition(0, 0) //stop flicker on activity change
             finish()
@@ -265,6 +268,14 @@ setSharedButton(false)
 private fun shareMood(){
 mooder.mood.mood= AvatarFactory.getMoodString(selectedMood)
 mooder.mood.timestamp = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss:SSSZ", Locale.UK).format(Date())
+
+//save cc
+val tm = this.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+if (tm.simCountryIso != "") {
+    mooder.mood.countryCode = tm.simCountryIso.toLowerCase()
+} else {
+    mooder.mood.countryCode = Locale.getDefault().country.toLowerCase() //default to locale if there's no sim iso
+}
 
 //location
 Log.w("MoodAvatar", "Now get location" )

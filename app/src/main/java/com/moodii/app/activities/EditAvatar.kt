@@ -16,7 +16,6 @@ import com.moodii.app.models.*
 import android.view.MenuItem
 import android.widget.ImageButton
 import android.widget.Toast
-import com.moodii.app.MoodiiApp
 import com.moodii.app.R
 import com.moodii.app.api.MoodiiApi
 import com.moodii.app.helpers.*
@@ -30,7 +29,6 @@ private var selectedPart  = HEAD
 private var coloringMode  = false
 
 class EditAvatar : AppCompatActivity() {
-    lateinit var app: MoodiiApp
 
     //Add the action buttons to Navbar
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -60,6 +58,7 @@ class EditAvatar : AppCompatActivity() {
         R.id.action_quit -> {
             val intent = Intent(this, MoodAvatar::class.java)
             intent.putExtra("mooderId", mooderId)
+            intent.putExtra("reloadMooder", true)
             startActivity(intent)
             overridePendingTransition(0, 0) //stop flicker on activity change
             finish() //forget back button
@@ -71,7 +70,6 @@ class EditAvatar : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        app = application as MoodiiApp
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_avatar)
 

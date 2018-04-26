@@ -18,7 +18,7 @@ private const val HAIRC = 1
 /**
  * Arbitrary helper functions for building Avatar
  */
-object AvatarFactory { //set of avatar part id's (svg's)
+object AvatarFactory { //set of avatar part id's (svg's) - WARNING this much match local files & remote api!
     private val moods  = arrayOf ("neutral","happy","sad","scared","angry","surprised")
     private val parts = arrayOf ( setOf("1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24"), //HEAD
             setOf("1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20"), //HAIRTOP

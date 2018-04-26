@@ -7,7 +7,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.moodii.app.R
 import android.content.Intent
+import android.graphics.drawable.Animatable
 import android.util.Log
+import android.widget.ImageView
 import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.ApiException
 import android.widget.Toast
@@ -35,7 +37,10 @@ class SignIn : AppCompatActivity() {
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
 
         //if signOut was called, explicitly sign out and prompt user for account
-        if(this.intent.hasExtra("signOut")) mGoogleSignInClient.signOut()
+        if(this.intent.hasExtra("signOut")) {
+            this.intent.removeExtra("signOut")
+            mGoogleSignInClient.signOut()
+        }
 
         // Handle Sign in button click.  Intent prompts the user to select a Google account to sign in with
         findViewById<SignInButton>(R.id.sign_in_button).setOnClickListener{ startActivityForResult(mGoogleSignInClient.signInIntent, RC_SIGN_IN) }
@@ -45,6 +50,14 @@ class SignIn : AppCompatActivity() {
         super.onStart()
         val account = GoogleSignIn.getLastSignedInAccount(this)
         if (account != null) startMoodii(account)
+
+        //show animate swipe icon
+        val splash = findViewById<ImageView>(R.id.splashMoodii)
+        val draw = splash.drawable
+        if (draw is Animatable) {
+            draw.start()
+        }
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
@@ -79,10 +92,12 @@ class SignIn : AppCompatActivity() {
                 200 -> { //retrieved existing mooder
                     intent = Intent(this, MoodAvatar::class.java)
                     intent.putExtra("mooderId", mooderId)
+                    intent.putExtra("reloadMooder", true)
                 }
                 201 -> { //new mooder
                     intent = Intent(this, EditAvatar::class.java)
                     intent.putExtra("mooderId", mooderId)
+                    intent.putExtra("reloadMooder", true)
                 }
                 else -> { //no mooder Id, login again
                     intent = Intent(this, SignIn::class.java)
