@@ -76,6 +76,11 @@ class MoodAvatar : AppCompatActivity() {
             finish()
             true
         }
+        R.id.action_help -> {
+            val intent = Intent(this, Help::class.java)
+            startActivity(intent)
+            true
+        }
         R.id.action_shareMoodCloud -> {
             shareMood()
             true
@@ -123,7 +128,11 @@ class MoodAvatar : AppCompatActivity() {
         //add navbar
         setSupportActionBar(findViewById(R.id.my_toolbar))
         supportActionBar?.title = " My " +  getString(R.string.app_name)
-        if (Random().nextBoolean()) supportActionBar?.setLogo(R.drawable.moodii_logo_sad) else supportActionBar?.setLogo(R.drawable.moodii_logo_happy)
+        if (Random().nextBoolean()) {
+            supportActionBar?.setLogo(R.drawable.moodii_logo_sad)
+        } else {
+            supportActionBar?.setLogo(R.drawable.moodii_logo_happy)
+        }
 
         //check intents
         if(this.intent.hasExtra("mooderId")) mooderId =this.intent.extras.getString("mooderId") //from SignIn
@@ -259,9 +268,9 @@ v[EYEBROWS].setColorFilter(Color.parseColor(mooder.avatar.eyebrowsColor), Porter
 
 private fun setButtonSelected(buttonViews: Array<AppCompatImageButton>, selectedButton: Int) {
 if (!buttonViews[selectedButton].isSelected) {
-selectedMood = selectedButton
-for (i in buttonViews.indices) buttonViews[i].isSelected = (i == selectedButton) //highlights the selected button
-setSharedButton(false)
+    selectedMood = selectedButton
+    for (i in buttonViews.indices) buttonViews[i].isSelected = (i == selectedButton) //highlights the selected button
+    setSharedButton(false)
 }
 }
 
@@ -278,10 +287,8 @@ if (tm.simCountryIso != "") {
 }
 
 //location
-Log.w("MoodAvatar", "Now get location" )
 if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION ) == PackageManager.PERMISSION_GRANTED) { //If we have permission for access to location
-        fusedLocationClient.lastLocation.addOnSuccessListener { location ->   //callback with location
-            Log.w("MoodAvatar", "locaton" + location.toString())
+        fusedLocationClient.lastLocation.addOnSuccessListener  { location ->   //callback with location
             if (location != null){
                 mooder.mood.latitude = location.latitude
                 mooder.mood.longitude = location.longitude
@@ -295,16 +302,25 @@ if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LO
 
 private fun saveMood(){
     Log.w("MoodAvatar", "saving with mooder " + mooderId + " " + mooder.mood.toString())
-    MoodiiApi.updateMood(mooderId, mooder.mood) {
-        if (it)  Toast.makeText(applicationContext, "Moodii shared", Toast.LENGTH_SHORT).show()
-        else     Toast.makeText(applicationContext, "Failed to save (Internet connection?)", Toast.LENGTH_SHORT).show()
+    MoodiiApi.updateMood(mooderId, mooder.mood)
+    {success: Boolean -> //callback
+        if (success) {
+            Toast.makeText(applicationContext, "Moodii shared", Toast.LENGTH_SHORT).show()
+        }
+        else {
+            Toast.makeText(applicationContext, "Failed to save (Internet connection?)", Toast.LENGTH_SHORT).show()
+        }
     }
 }
 
 private fun setSharedButton(stored: Boolean) {
 val shareButton = findViewById<FloatingActionButton>(R.id.shareButton)
-if (stored)  shareButton.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.colorFloatingButtonSaved))
-else shareButton.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.colorFloatingButton))
+if (stored)  {
+    shareButton.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.colorFloatingButtonSaved))
+}
+else {
+    shareButton.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.colorFloatingButton))
+}
 }
 
 fun viewToBitmap(view: View): Bitmap {  //careful where this is called, views must have been created width/height will be zero

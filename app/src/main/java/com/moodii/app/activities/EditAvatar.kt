@@ -41,8 +41,8 @@ class EditAvatar : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         R.id.action_save -> {
             MoodiiApi.updateAvatar(mooderId, mooder.avatar)
-            {
-                if (it) {
+            { success: Boolean -> //callback
+                if (success) {
                     val intent = Intent(this, MoodAvatar::class.java)
                     intent.putExtra("mooderId", mooderId)
                     intent.putExtra("reloadMooder", true)
@@ -76,7 +76,11 @@ class EditAvatar : AppCompatActivity() {
         //add Nav bar
         setSupportActionBar(findViewById(R.id.my_toolbar))
         supportActionBar?.title = " Edit " +  getString(R.string.app_name)
-        if (Random().nextBoolean()) supportActionBar?.setLogo(R.drawable.moodii_logo_sad) else supportActionBar?.setLogo(R.drawable.moodii_logo_happy)
+        if (Random().nextBoolean()) {
+            supportActionBar?.setLogo(R.drawable.moodii_logo_sad)
+        } else {
+            supportActionBar?.setLogo(R.drawable.moodii_logo_happy)
+        }
 
         //Check passed intents
         if(this.intent.hasExtra("mooderId")) mooderId =this.intent.extras.getString("mooderId")

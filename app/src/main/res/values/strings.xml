@@ -2,6 +2,7 @@
     <string name="app_name">Moodii</string>
     <string name="menu_signOut">Sign Out</string>
     <string name="menu_edit">Edit Moodii</string>
+    <string name="menu_help">Help</string>
     <string name="menu_share_mood">Share Moodii</string>
     <string name="menu_share_image">Share Image to App</string>
     <string name="menu_share_link">Share Link to App</string>
