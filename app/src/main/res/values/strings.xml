@@ -4,8 +4,8 @@
     <string name="menu_edit">Edit Moodii</string>
     <string name="menu_help">Help</string>
     <string name="menu_share_mood">Share Moodii</string>
-    <string name="menu_share_image">Share Image to App</string>
-    <string name="menu_share_link">Share Link to App</string>
+    <string name="menu_share_image">Share Image</string>
+    <string name="menu_share_link">Share Link</string>
     <string name="dialog_location_permission_title">Access to location is OFF</string>
     <string name="dialog_location_permission_text">We use coarse grained location information to collate anonymous regional mood data. Your specific location information does not get shared with other users. \n\nPlease consider enabling location access on your device to make Moodii a better service ;).</string>
     <string name="dialog_location_permission_button_dismiss">Dismiss</string>

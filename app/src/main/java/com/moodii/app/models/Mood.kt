@@ -1,7 +1,7 @@
 package com.moodii.app.models
 
 /**
- * Data class for storing mood
+ * data class Mood - Model for storing mood and REST API params
  */
 
 data class Mood(

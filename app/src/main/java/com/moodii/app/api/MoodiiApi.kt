@@ -15,7 +15,7 @@ import retrofit2.http.PUT
 import retrofit2.http.Path
 
 /**
- * Provides api for interacting with moodii service and data
+ *  MoodiiApi - Provides api for interacting with moodii service and data
  */
 
 internal interface MoodiiClient {

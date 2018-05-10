@@ -81,13 +81,12 @@ class SignIn : AppCompatActivity() {
         }
     }
 
+    //startMoodii() - authenticates moodii account and starts main app.
     private fun startMoodii(account: GoogleSignInAccount) {
         val intent: Intent
-        val token: String? = account.idToken
-        Log.w("LOGIN","idToken is " + account.idToken)
+        val token: String? = account.idToken //JWT returned from Google sign-in
         if (token != null) {
-            val (resultCode, mooderId) = MoodiiApi.getId(token)
-            Log.w("LOGIN","MooderId is " + mooderId)
+            val (resultCode, mooderId) = MoodiiApi.getId(token) //REST call, authenticate with token.
             when (resultCode) {
                 200 -> { //retrieved existing mooder
                     intent = Intent(this, MoodAvatar::class.java)

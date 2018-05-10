@@ -1,11 +1,11 @@
 package com.moodii.app.models
 
 /**
- * data class for storing Avatar
+ * data class Avatar – model for storing Avatar and REST API params
  */
 
 data class Avatar(
-        var headId: String = "1",
+        var headId: String = "1",  //default maps to the file head_1.svg
         var hairTopId: String = "1",
         var hairBackId: String = "1",
         var eyesId: String = "1",

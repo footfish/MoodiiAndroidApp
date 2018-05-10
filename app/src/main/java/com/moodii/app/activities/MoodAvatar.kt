@@ -24,14 +24,12 @@ import java.text.SimpleDateFormat
 import java.util.*
 import android.graphics.Bitmap
 import android.graphics.Canvas
-import android.graphics.drawable.Animatable
 import android.support.constraint.ConstraintLayout
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.FileProvider
 import android.support.v7.app.AlertDialog
 import android.telephony.TelephonyManager
 import android.view.View
-import android.widget.ImageView
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.moodii.app.BuildConfig
@@ -44,7 +42,7 @@ private var mooder = Mooder("","",Avatar(), Mood())
 private var selectedMood  = -1 //-1 = unset, forces load from api
 private var reloadMooder = true //  //if true will load from API, esp. used on rotate
 private var mooderId = "0"
-private const val MOODIIURL = "http://www.moodii.com/"
+private const val MOODIISHAREURL = "http://www.moodii.com/me/"
 private const val REQUEST_CODE_ACCESS_COURSE_LOCATION = 5401
 
 class MoodAvatar : AppCompatActivity() {
@@ -88,22 +86,21 @@ class MoodAvatar : AppCompatActivity() {
         R.id.action_shareMoodLink -> {
             val sendIntent = Intent()
             sendIntent.action = Intent.ACTION_SEND
-            sendIntent.putExtra(Intent.EXTRA_TEXT,  MOODIIURL+"avatar/"+ mooder.hash+".png")
+            sendIntent.putExtra(Intent.EXTRA_TEXT,  MOODIISHAREURL + mooder.hash+".png")
             sendIntent.putExtra(Intent.EXTRA_SUBJECT,  "This is how I feel..")
             sendIntent.type = "text/plain"
             startActivity(Intent.createChooser(sendIntent, "Share link using"))
             true
         }
         R.id.action_shareMoodImage -> {
-            //save to bitmap
+            //save bitmap to cache file
             val avatarLayoutView = findViewById<ConstraintLayout>(R.id.avatarLayout)
             val bitmap = viewToBitmap(avatarLayoutView)
-
             val file = File(this.cacheDir, "myMoodii.png")
-            Log.w("MoodAvatar", "Storing to file " + file.toString())
             val output = FileOutputStream(file)
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, output)
             output.close()
+            //share image file with intent
             val sendIntent = Intent()
             val contentUri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".fileprovider", file)
             sendIntent.action = Intent.ACTION_SEND
@@ -231,22 +228,18 @@ class MoodAvatar : AppCompatActivity() {
             arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION),
             REQUEST_CODE_ACCESS_COURSE_LOCATION)
             }
-        }
-        //show animate swipe icon
-        val swipeSplash = findViewById<ImageView>(R.id.iconSwipe)
-        val swipeDraw = swipeSplash.drawable
-        if (swipeDraw is Animatable) {
-            swipeDraw.start()
-        }
+         }
     }
 
+/* renderMoodAvatar()  - Render mood.avatar to avatarViews with appropriate mood */
 private fun renderMoodAvatar(avatarViews: Array<AppCompatImageView>, mood: Int) {
 for ( partType in avatarViews.indices) {
-avatarViews[partType].setImageResource(resources.getIdentifier(AvatarFactory.getResPart(mooder.avatar, partType, mood), "drawable", packageName))
-renderPartColor(avatarViews,partType)
+    avatarViews[partType].setImageResource(resources.getIdentifier(AvatarFactory.getResPart(mooder.avatar, partType, mood), "drawable", packageName))
+    renderPartColor(avatarViews,partType)
 }
 }
 
+    //renderPartColor() - Applies color from mooder.avatar to partType in avatar ImageView array
 private fun renderPartColor(v: Array<AppCompatImageView>, partType: Int) {
 when(partType) {
 HEAD -> {
@@ -266,6 +259,7 @@ v[EYEBROWS].setColorFilter(Color.parseColor(mooder.avatar.eyebrowsColor), Porter
 }
 }
 
+/* setButtonSelected() - Highlights the selected mood button */
 private fun setButtonSelected(buttonViews: Array<AppCompatImageButton>, selectedButton: Int) {
 if (!buttonViews[selectedButton].isSelected) {
     selectedMood = selectedButton
@@ -274,6 +268,7 @@ if (!buttonViews[selectedButton].isSelected) {
 }
 }
 
+/* shareMood() - Prepares mood data model then saves to api*/
 private fun shareMood(){
 mooder.mood.mood= AvatarFactory.getMoodString(selectedMood)
 mooder.mood.timestamp = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss:SSSZ", Locale.UK).format(Date())
@@ -300,6 +295,7 @@ if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LO
 }
 }
 
+/* saveMood() - Saves mood data model to api*/
 private fun saveMood(){
     Log.w("MoodAvatar", "saving with mooder " + mooderId + " " + mooder.mood.toString())
     MoodiiApi.updateMood(mooderId, mooder.mood)
@@ -313,6 +309,7 @@ private fun saveMood(){
     }
 }
 
+/* setSharedButton() - toggles highlight on floating shared button */
 private fun setSharedButton(stored: Boolean) {
 val shareButton = findViewById<FloatingActionButton>(R.id.shareButton)
 if (stored)  {
@@ -323,7 +320,10 @@ else {
 }
 }
 
-fun viewToBitmap(view: View): Bitmap {  //careful where this is called, views must have been created width/height will be zero
+/* viewToBitmap() - converts view to a bitmap, used for image sharing
+* **CAREFUL** where this is called, views must have been created or width/height will be zero
+* */
+private fun viewToBitmap(view: View): Bitmap {  //careful where this is called, views must have been created width/height will be zero
 val bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
 val canvas = Canvas(bitmap)
 view.draw(canvas)
