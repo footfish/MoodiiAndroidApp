@@ -19,6 +19,7 @@ import android.widget.Toast
 import com.moodii.app.R
 import com.moodii.app.api.MoodiiApi
 import com.moodii.app.helpers.*
+import com.moodii.app.helpers.AvatarFactory.getRandomAvatar
 import java.util.*
 
 
@@ -62,6 +63,21 @@ class EditAvatar : AppCompatActivity() {
             startActivity(intent)
             overridePendingTransition(0, 0) //stop flicker on activity change
             finish() //forget back button
+            true
+        }
+        R.id.action_random -> {
+            mooder.avatar = getRandomAvatar()
+            //init array of avatar parts
+            val avatarViews = arrayOf<AppCompatImageView> (
+                    findViewById(R.id.head),
+                    findViewById(R.id.hairTop),
+                    findViewById(R.id.hairBack),
+                    findViewById(R.id.eyes),
+                    findViewById(R.id.nose),
+                    findViewById(R.id.mouth),
+                    findViewById(R.id.eyebrows)
+            )
+            renderAvatar(avatarViews)
             true
         }
        else -> { //action not recognised.
@@ -125,11 +141,7 @@ class EditAvatar : AppCompatActivity() {
                 Toast.makeText(applicationContext, "Can't edit (Internet connection active?)", Toast.LENGTH_SHORT).show()
             }
         }
-
-
         //nts: implement failed load
-        Log.w("EditAvatar", "starting with mooder " + mooder.toString())
-
 
         //init selected buttons
         toggleColoringMode(findViewById<ImageButton>(R.id.iconFaceToggle))
@@ -137,12 +149,14 @@ class EditAvatar : AppCompatActivity() {
         //set button listeners
         for (i in buttonViews.indices) buttonViews[i].setOnClickListener { setButtonSelected(buttonViews,i)}
 
-        //render avatar parts
+
+        renderAvatar(avatarViews)
+/*        //render avatar parts
         for (i in avatarViews.indices) renderPart(avatarViews[i],i)
         //render avatar parts colors
         renderPartColor(avatarViews, HEAD)
         renderPartColor(avatarViews, HAIRTOP)
-        renderPartColor(avatarViews, EYEBROWS)
+        renderPartColor(avatarViews, EYEBROWS) */
 
 
         (avatarViews[HEAD] as View).setOnTouchListener(  //avatarViews[] cast as View as View will override performClick (otherwise warning)
@@ -150,21 +164,21 @@ class EditAvatar : AppCompatActivity() {
                     override fun onSwipeRight() {
                         if (!coloringMode) {
                             when(selectedPart) {
-                                HEAD -> mooder.avatar.headId = AvatarFactory.getNextPart(mooder.avatar.headId, selectedPart)
-                                HAIRTOP -> mooder.avatar.hairTopId = AvatarFactory.getNextPart(mooder.avatar.hairTopId, selectedPart)
-                                HAIRBACK -> mooder.avatar.hairBackId = AvatarFactory.getNextPart(mooder.avatar.hairBackId, selectedPart)
-                                EYES -> mooder.avatar.eyesId = AvatarFactory.getNextPart(mooder.avatar.eyesId, selectedPart)
-                                NOSE -> mooder.avatar.noseId = AvatarFactory.getNextPart(mooder.avatar.noseId, selectedPart)
-                                MOUTH -> mooder.avatar.mouthId = AvatarFactory.getNextPart(mooder.avatar.mouthId, selectedPart)
-                                EYEBROWS -> mooder.avatar.eyebrowsId = AvatarFactory.getNextPart(mooder.avatar.eyebrowsId, selectedPart)
+                                HEAD -> mooder.avatar.headId = AvatarFactory.getNextPart(mooder.avatar.headId, selectedPart)!!
+                                HAIRTOP -> mooder.avatar.hairTopId = AvatarFactory.getNextPart(mooder.avatar.hairTopId, selectedPart)!!
+                                HAIRBACK -> mooder.avatar.hairBackId = AvatarFactory.getNextPart(mooder.avatar.hairBackId, selectedPart)!!
+                                EYES -> mooder.avatar.eyesId = AvatarFactory.getNextPart(mooder.avatar.eyesId, selectedPart)!!
+                                NOSE -> mooder.avatar.noseId = AvatarFactory.getNextPart(mooder.avatar.noseId, selectedPart)!!
+                                MOUTH -> mooder.avatar.mouthId = AvatarFactory.getNextPart(mooder.avatar.mouthId, selectedPart)!!
+                                EYEBROWS -> mooder.avatar.eyebrowsId = AvatarFactory.getNextPart(mooder.avatar.eyebrowsId, selectedPart)!!
                             }
                             renderPart(avatarViews[selectedPart], selectedPart)
                         } else {
                             when(selectedPart) {
-                                HEAD -> mooder.avatar.skinColor = AvatarFactory.getNextPartColor(mooder.avatar.skinColor, selectedPart)
-                                HAIRTOP -> mooder.avatar.hairColor = AvatarFactory.getNextPartColor(mooder.avatar.hairColor, selectedPart)
-                                HAIRBACK -> mooder.avatar.hairColor = AvatarFactory.getNextPartColor(mooder.avatar.hairColor, selectedPart)
-                                EYEBROWS -> mooder.avatar.eyebrowsColor = AvatarFactory.getNextPartColor(mooder.avatar.eyebrowsColor, selectedPart)
+                                HEAD -> mooder.avatar.skinColor = AvatarFactory.getNextPartColor(mooder.avatar.skinColor, selectedPart)!!
+                                HAIRTOP -> mooder.avatar.hairColor = AvatarFactory.getNextPartColor(mooder.avatar.hairColor, selectedPart)!!
+                                HAIRBACK -> mooder.avatar.hairColor = AvatarFactory.getNextPartColor(mooder.avatar.hairColor, selectedPart)!!
+                                EYEBROWS -> mooder.avatar.eyebrowsColor = AvatarFactory.getNextPartColor(mooder.avatar.eyebrowsColor, selectedPart)!!
                             }
                             renderPartColor(avatarViews, selectedPart)
                         }
@@ -172,21 +186,21 @@ class EditAvatar : AppCompatActivity() {
                     override fun onSwipeLeft() {
                         if (!coloringMode) {
                             when (selectedPart) {
-                                HEAD -> mooder.avatar.headId = AvatarFactory.getPrevPart(mooder.avatar.headId, selectedPart)
-                                HAIRTOP -> mooder.avatar.hairTopId = AvatarFactory.getPrevPart(mooder.avatar.hairTopId, selectedPart)
-                                HAIRBACK -> mooder.avatar.hairBackId = AvatarFactory.getPrevPart(mooder.avatar.hairBackId, selectedPart)
-                                EYES -> mooder.avatar.eyesId = AvatarFactory.getPrevPart(mooder.avatar.eyesId, selectedPart)
-                                NOSE -> mooder.avatar.noseId = AvatarFactory.getPrevPart(mooder.avatar.noseId, selectedPart)
-                                MOUTH -> mooder.avatar.mouthId = AvatarFactory.getPrevPart(mooder.avatar.mouthId, selectedPart)
-                                EYEBROWS -> mooder.avatar.eyebrowsId = AvatarFactory.getPrevPart(mooder.avatar.eyebrowsId, selectedPart)
+                                HEAD -> mooder.avatar.headId = AvatarFactory.getPrevPart(mooder.avatar.headId, selectedPart)!!
+                                HAIRTOP -> mooder.avatar.hairTopId = AvatarFactory.getPrevPart(mooder.avatar.hairTopId, selectedPart)!!
+                                HAIRBACK -> mooder.avatar.hairBackId = AvatarFactory.getPrevPart(mooder.avatar.hairBackId, selectedPart)!!
+                                EYES -> mooder.avatar.eyesId = AvatarFactory.getPrevPart(mooder.avatar.eyesId, selectedPart)!!
+                                NOSE -> mooder.avatar.noseId = AvatarFactory.getPrevPart(mooder.avatar.noseId, selectedPart)!!
+                                MOUTH -> mooder.avatar.mouthId = AvatarFactory.getPrevPart(mooder.avatar.mouthId, selectedPart)!!
+                                EYEBROWS -> mooder.avatar.eyebrowsId = AvatarFactory.getPrevPart(mooder.avatar.eyebrowsId, selectedPart)!!
                             }
                             renderPart(avatarViews[selectedPart], selectedPart)
                         } else {
                             when(selectedPart) {
-                                HEAD -> mooder.avatar.skinColor = AvatarFactory.getPrevPartColor(mooder.avatar.skinColor, selectedPart)
-                                HAIRTOP -> mooder.avatar.hairColor = AvatarFactory.getPrevPartColor(mooder.avatar.hairColor, selectedPart)
-                                HAIRBACK -> mooder.avatar.hairColor = AvatarFactory.getPrevPartColor(mooder.avatar.hairColor, selectedPart)
-                                EYEBROWS -> mooder.avatar.eyebrowsColor = AvatarFactory.getPrevPartColor(mooder.avatar.eyebrowsColor, selectedPart)
+                                HEAD -> mooder.avatar.skinColor = AvatarFactory.getPrevPartColor(mooder.avatar.skinColor, selectedPart)!!
+                                HAIRTOP -> mooder.avatar.hairColor = AvatarFactory.getPrevPartColor(mooder.avatar.hairColor, selectedPart)!!
+                                HAIRBACK -> mooder.avatar.hairColor = AvatarFactory.getPrevPartColor(mooder.avatar.hairColor, selectedPart)!!
+                                EYEBROWS -> mooder.avatar.eyebrowsColor = AvatarFactory.getPrevPartColor(mooder.avatar.eyebrowsColor, selectedPart)!!
                             }
                             renderPartColor(avatarViews, selectedPart)
                         }
@@ -205,6 +219,15 @@ class EditAvatar : AppCompatActivity() {
             }
 
     }
+
+    /* renderAvatar()  - Renders mood.avatar to avatarViews with neutral mood */
+    private fun renderAvatar(avatarViews: Array<AppCompatImageView>) {
+        for ( partType in avatarViews.indices) {
+            avatarViews[partType].setImageResource(resources.getIdentifier(AvatarFactory.getResPart(mooder.avatar, partType, NEUTRAL), "drawable", packageName))
+            renderPartColor(avatarViews,partType)
+        }
+    }
+
     //renders the avatars stored part of type 'partType' to the passed ImageView v.
     private fun renderPart(v: ImageView, partType: Int) {
             v.setImageResource(resources.getIdentifier(AvatarFactory.getResPart(mooder.avatar, partType), "drawable", packageName))

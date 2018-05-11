@@ -49,52 +49,54 @@ object AvatarFactory { //set of avatar part id's (svg's) - WARNING this much mat
 
     // getRandomAvatar() - returns a random avatar
     fun getRandomAvatar(): Avatar {
-        val randomAvatar = Avatar(parts[HEAD].elementAt(Random().nextInt(parts[HEAD].size-1)),
-                parts[HAIRTOP].elementAt(Random().nextInt(parts[HAIRTOP].size-1)),
-                parts[HAIRBACK].elementAt(Random().nextInt(parts[HAIRBACK].size-1)),
-                parts[EYES].elementAt(Random().nextInt(parts[EYES].size-1)),
-                parts[NOSE].elementAt(Random().nextInt(parts[NOSE].size-1)),
-                parts[MOUTH].elementAt(Random().nextInt(parts[MOUTH].size-1)),
-                parts[EYEBROWS].elementAt(Random().nextInt(parts[EYEBROWS].size-1)),
-                partcolors[HAIRC].elementAt(Random().nextInt(parts[HAIRC].size-1)),
-                partcolors[SKINC].elementAt(Random().nextInt(parts[SKINC].size-1)),
-                partcolors[HAIRC].elementAt(Random().nextInt(parts[HAIRC].size-1)))
+        val randomAvatar = Avatar(parts[HEAD].elementAt(Random().nextInt(parts[HEAD].size)),
+                parts[HAIRTOP].elementAt(Random().nextInt(parts[HAIRTOP].size)),
+                parts[HAIRBACK].elementAt(Random().nextInt(parts[HAIRBACK].size)),
+                parts[EYES].elementAt(Random().nextInt(parts[EYES].size)),
+                parts[NOSE].elementAt(Random().nextInt(parts[NOSE].size)),
+                parts[MOUTH].elementAt(Random().nextInt(parts[MOUTH].size)),
+                parts[EYEBROWS].elementAt(Random().nextInt(parts[EYEBROWS].size)),
+                partcolors[HAIRC].elementAt(Random().nextInt(parts[HAIRC].size)),
+                partcolors[SKINC].elementAt(Random().nextInt(parts[SKINC].size)),
+                partcolors[HAIRC].elementAt(Random().nextInt(parts[HAIRC].size)))
         return randomAvatar
     }
 
     // getPrevPart() - get's the previous part (of type partType) in the parts array in circular fashion
-    fun getPrevPart(partId: String, partType: Int): String{
-        return(getPrev(parts[partType], partId))
+    fun getPrevPart(partId: String, partType: Int): String?{
+        return if(partType >= 0 && partType < parts.size)  getPrev(parts[partType], partId) else null
     }
 
     // getNextPart() - get's the next part (of type partType) in the parts array in circular fashion
-    fun getNextPart(id: String, partType: Int): String{
-        return(getNext(parts[partType], id))
+    fun getNextPart(partId: String, partType: Int): String?{
+        return if(partType >= 0 && partType < parts.size) getNext(parts[partType], partId) else null
     }
 
     // getPrevPartColor() - get's the previous part (of type partType) in the partcolors array in circular fashion
-    fun getPrevPartColor(id: String, partType: Int): String {
+    fun getPrevPartColor(id: String, partType: Int): String? {
         return (when (partType) {
+            HEAD-> getPrev(partcolors[SKINC], id)
             HAIRTOP -> getPrev(partcolors[HAIRC], id)
             HAIRBACK -> getPrev(partcolors[HAIRC], id)
             EYEBROWS -> getPrev(partcolors[HAIRC], id)
-            else -> getPrev(partcolors[SKINC], id)  // HEAD/default
+            else -> null
         })
     }
 
     // getNextPartColor() - get's the next part (of type partType) in the partscolors array in circular fashion
-    fun getNextPartColor(id: String, partType: Int): String{
+    fun getNextPartColor(id: String, partType: Int): String? {
         return (when (partType) {
+            HEAD -> getNext(partcolors[SKINC], id)
             HAIRTOP -> getNext(partcolors[HAIRC], id)
             HAIRBACK -> getNext(partcolors[HAIRC], id)
             EYEBROWS -> getNext(partcolors[HAIRC], id)
-            else -> getNext(partcolors[SKINC], id)  // HEAD/default
+            else -> null
         })
     }
 
     // getMoodString() - convert mood passed as Int to String
     fun getMoodString(mood: Int): String{
-        return if (mood > moods.size) moods[mood] else moods[0]
+        return if (mood >= 0 && mood < moods.size) moods[mood] else moods[0]
     }
 
     // getMoodInt() - convert mood passed as String to Int
