@@ -173,7 +173,7 @@ class MoodAvatar : AppCompatActivity() {
         Log.w("MoodAvatar", "starting with mooder " + mooder.toString())
 
         //init buttons
-        if (selectedMood == -1) selectedMood  = AvatarFactory.getMoodInt(mooder.mood.mood)
+        selectedMood  = AvatarFactory.getMoodInt(mooder.mood.mood)
         setButtonSelected(buttonViews, selectedMood)
 
         //set button listeners
